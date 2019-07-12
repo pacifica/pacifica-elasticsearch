@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Test the example module."""
+"""Test the elasticsearch module."""
 from unittest import TestCase
-from pacifica.example import Example
+from pacifica.elasticsearch import Example
 
 
-class TestExample(TestCase):
+class TestElasticsearch(TestCase):
     """Test the example class."""
 
     def test_add(self):

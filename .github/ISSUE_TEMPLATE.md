@@ -1,4 +1,4 @@
-### Pacifica REPLACE_ME version
+### Pacifica Elasticsearch version
 [Version of the pacifica software where you are encountering the issue]
 
 ### Pacifica Core Software versions

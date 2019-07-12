@@ -12,11 +12,11 @@ from setuptools import setup, find_packages
 INSTALL_REQS = parse_requirements('requirements.txt', session='hack')
 
 setup(
-    name='pacifica-service',
+    name='pacifica-elasticsearch',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
-    description='Pacifica Example Library',
-    url='https://github.com/pacifica/template-repository/',
+    description='Pacifica Elasticsearch Library',
+    url='https://github.com/pacifica/pacifica-elasticsearch/',
     long_description=open(path.join(
         path.abspath(path.dirname(__file__)),
         'README.md')).read(),
