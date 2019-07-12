@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
+from peewee import DoesNotExist
+from pacifica.metadata.orm import DOITransaction, TransactionUser
 from ..config import get_config
 from .users import UsersRender
 from .institutions import InstitutionsRender
@@ -50,9 +52,15 @@ class TransactionsRender(SearchBase):
     @classmethod
     def release(cls, **trans_obj):
         """Return 'true' if transaction has been release."""
-        if cls.get_rel_by_args('transaction_user', transaction=trans_obj['_id'], relationship=cls.releaser_uuid):
-            return 'true'
-        return 'false'
+        predicate = ((TransactionUser.transaction == trans_obj['_id']) & (
+            TransactionUser.relationship == cls.releaser_uuid))
+        query = (TransactionUser.select().where(predicate))
+        try:
+            query.get()
+            ret = 'true'
+        except DoesNotExist:
+            ret = 'false'
+        return ret
 
     @classmethod
     def access_url(cls, **trans_obj):
@@ -68,14 +76,16 @@ class TransactionsRender(SearchBase):
     @classmethod
     def get_trans_doi(cls, trans_id):
         """Get the transaction doi or return false."""
-        trans_user = cls.get_rel_by_args('transaction_user', transaction=trans_id, relationship=cls.releaser_uuid)
-        if not trans_user:
-            return 'false'
-        rel_uuid = trans_user[0].get('uuid')
-        doi_trans = cls.get_rel_by_args('doi_transaction', transaction=rel_uuid)
-        if doi_trans:
-            return doi_trans[0].get('doi', 'false')
-        return 'false'
+        preciate = (TransactionUser.uuid == DOITransaction.transaction)
+        where_clause = ((TransactionUser.relationship == cls.releaser_uuid) & (TransactionUser.transaction == trans_id))
+        # pylint: disable=no-member
+        query = (DOITransaction.select().join(TransactionUser, on=preciate).where(where_clause))
+        # pylint: enable=no-member
+        try:
+            ret = query.get().doi
+        except DoesNotExist:
+            ret = 'false'
+        return ret
 
     @classmethod
     def has_doi(cls, **trans_obj):

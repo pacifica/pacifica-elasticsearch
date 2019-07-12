@@ -56,14 +56,14 @@ class ProjectsRender(SearchBase):
         return text_type('{updated}').format(**proj_obj)
 
     @staticmethod
-    def created_date(**proj_obj):
-        """Return string for the created date."""
-        return text_type('{created}').format(**proj_obj)
-
-    @staticmethod
     def display_name(**proj_obj):
         """Return the string to render display_name."""
         return text_type('{title}').format(**proj_obj)
+
+    @staticmethod
+    def created_date(**proj_obj):
+        """Return string for the created date."""
+        return text_type('{created}').format(**proj_obj)
 
     @staticmethod
     def keyword(**proj_obj):

@@ -9,7 +9,7 @@ from datetime import timedelta
 from .search_sync import search_sync
 
 logging.basicConfig()
-LOGGER = logging.getLogger('urllib3')
+LOGGER = logging.getLogger('peewee')
 
 
 def objstr_to_timedelta(obj_str):
@@ -61,6 +61,6 @@ def main(*argv):
     if not argv:  # pragma: no cover
         argv = sys_argv[1:]
     args = parser.parse_args(argv)
-    if args.verbose:
+    if args.verbose:  # pragma: no cover this is for debugging
         LOGGER.setLevel('DEBUG')
     args.func(args)
