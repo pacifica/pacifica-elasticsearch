@@ -1,0 +1,25 @@
+version: 0.1.{build}
+pull_requests:
+  do_not_increment_build_number: true
+
+environment:
+  matrix:
+    - PYTHON: C:\Python37-x64
+    - PYTHON: C:\Python36-x64
+
+install:
+  - ps: >
+      & "$env:PYTHON\python.exe" -m virtualenv C:\pacifica;
+      C:\pacifica\Scripts\activate.ps1;
+      python -m pip install --upgrade pip setuptools wheel;
+      pip install -r requirements-dev.txt
+
+build: off
+
+test_script:
+  - ps: >
+      mkdir C:\tmp; C:\pacifica\Scripts\activate.ps1;
+      pre-commit run -a;
+      pip install .; cd tests;
+      coverage run --include='*/site-packages/pacifica/elasticsearch/*' -m pytest -xsv;
+      coverage report -m --fail-under=100;
