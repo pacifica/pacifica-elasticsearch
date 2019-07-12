@@ -1,8 +1,11 @@
 language: python
 dist: xenial
+services:
+  - postgresql
+  - elasticsearch
 python:
 - 3.6
-- 3.7
+- 2.7
 
 stages:
 - lint
@@ -14,12 +17,49 @@ script:
 - coverage run --include='*/site-packages/pacifica/elasticsearch/*' -m pytest -xsv
 - coverage report -m --fail-under 100
 
+env:
+  NOTIFICATIONS_DISABLED: True
+  PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
+  ADMIN_USER_ID: 10
+  CACHE_SIZE: 0
+
+before_script:
+- psql -c 'create database pacifica_metadata;' -U postgres
+- export METADATA_CPCONFIG="$PWD/travis/server.conf"
+- pacifica-metadata-cmd dbsync
+- pushd tests; python -m pacifica.metadata & echo $! > metadata.pid; popd;
+- |
+  MAX_TRIES=60
+  HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true)
+  while [[ $HTTP_CODE != 200 && $MAX_TRIES > 0 ]] ; do
+    sleep 1
+    HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true)
+    MAX_TRIES=$(( MAX_TRIES - 1 ))
+  done
+- |
+  TOP_DIR=$PWD
+  MD_TEMP=$(mktemp -d)
+  VERSION=$(pip show pacifica-metadata | grep Version: | awk '{ print $2 }')
+  git clone https://github.com/pacifica/pacifica-metadata.git ${MD_TEMP}
+  pushd ${MD_TEMP}
+  git checkout v${VERSION}
+  python tests/test_files/loadit_test.py
+  popd
+  P_TEMP=$(mktemp -d)
+  VERSION=$(pip show pacifica-policy | grep Version: | awk '{ print $2 }')
+  git clone https://github.com/pacifica/pacifica-policy.git ${P_TEMP}
+  pushd ${P_TEMP}
+  git checkout v${VERSION}
+  python tests/test_files/loadit_test.py
+  popd
+- kill -9 `cat tests/metadata.pid`
+
 jobs:
   include:
   - stage: lint
     python: 3.6
     script: pre-commit run -a
-  - python: 3.7
+  - python: 2.7
     script: pre-commit run -a
 
 install:

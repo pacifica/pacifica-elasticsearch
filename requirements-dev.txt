@@ -1,7 +1,8 @@
 -r requirements.txt
 coverage
+pacifica-policy>=0.7.0,<1
 pep257
 pre-commit
-pylint
+pylint<2
 pytest
 setuptools

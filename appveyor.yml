@@ -2,17 +2,56 @@ version: 0.1.{build}
 pull_requests:
   do_not_increment_build_number: true
 
+services:
+  - postgresql
+
 environment:
+  PGUSER: postgres
+  PGPASSWORD: Password12!
+  PGSQL_PATH: C:\Program Files\PostgreSQL\9.6
+  NOTIFICATIONS_DISABLED: True
+  PEEWEE_URL: postgres://postgres:Password12!@localhost/pacifica_metadata
+  METADATA_URL: http://127.0.0.1:8121
+  STATUS_URL: http://127.0.0.1:8121/keys?_id=104
+  ADMIN_USER_ID: 10
+  CACHE_SIZE: 0
   matrix:
-    - PYTHON: C:\Python37-x64
+    - PYTHON: C:\Python27-x64
     - PYTHON: C:\Python36-x64
+
+before_test:
+- ps: >
+    $env:PATH = "${env:PGSQL_PATH}\bin;${env:PYTHON}\Scripts;${env:PATH}";
+    createdb pacifica_metadata;
+    C:\pacifica\Scripts\activate.ps1;
+    $env:METADATA_CPCONFIG = "$PWD/travis/server.conf";
+    pacifica-metadata-cmd dbsync;
+    $md_proc = Start-Process C:\pacifica\Scripts\pacifica-metadata.exe -RedirectStandardError metadata-error.log -RedirectStandardOutput metadata-output.log -PassThru;
+    $MD_VERSION = `pip show pacifica-metadata | grep Version: | awk '{ print $2 }';
+    Invoke-WebRequest https://github.com/pacifica/pacifica-metadata/archive/v${MD_VERSION}.zip -OutFile pacifica-metadata.zip;
+    Expand-Archive pacifica-metadata.zip -DestinationPath C:\pacifica-metadata;
+    pushd C:\pacifica-metadata\pacifica-metadata-${MD_VERSION};
+    sleep 10; Invoke-WebRequest http://localhost:8121/users;
+    python tests\test_files\loadit_test.py;
+    popd;
+    $P_VERSION = `pip show pacifica-policy | grep Version: | awk '{ print $2 }';
+    Invoke-WebRequest https://github.com/pacifica/pacifica-policy/archive/v${P_VERSION}.zip -OutFile pacifica-policy.zip;
+    Expand-Archive pacifica-policy.zip -DestinationPath C:\pacifica-policy;
+    pushd C:\pacifica-policy\pacifica-policy-${P_VERSION};
+    python tests\test_files\loadit_test.py;
+    popd;
+    $md_proc | Stop-Process;
 
 install:
   - ps: >
       & "$env:PYTHON\python.exe" -m virtualenv C:\pacifica;
+      Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.7.1.zip" -OutFile "elasticsearch.zip";
+      Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
+      Start-Process C:\elasticsearch\elasticsearch-6.7.1\bin\elasticsearch;
       C:\pacifica\Scripts\activate.ps1;
       python -m pip install --upgrade pip setuptools wheel;
-      pip install -r requirements-dev.txt
+      python -m pip install -r requirements-dev.txt;
+      echo 'Done';
 
 build: off
 
