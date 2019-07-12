@@ -2,22 +2,19 @@
 # -*- coding: utf-8 -*-
 """Test the elasticsearch module."""
 from unittest import TestCase
-from pacifica.elasticsearch import Example
+from pacifica.elasticsearch.__main__ import main
 
 
 class TestElasticsearch(TestCase):
     """Test the example class."""
 
-    def test_add(self):
+    def test_main(self):
         """Test the add method in example class."""
-        self.assertEqual(Example().add('123', 'abc'),
-                         '123abc', 'sum of strings should work')
-        self.assertEqual(Example().add(123, 456), 579,
-                         'sum of integers should work')
-
-    def test_mul(self):
-        """Test the mul method in example class."""
-        self.assertEqual(Example().mul('a', 4), 'aaaa',
-                         'multiply of string and number should work')
-        self.assertEqual(Example().mul(2, 3), 6,
-                         'multiply of two integers should work')
+        hit_exception = False
+        try:
+            main('--objects-per-page=2', '--threads=1')
+        # pylint: disable=broad-except
+        except Exception:
+            hit_exception = True
+        # pylint: enable=broad-except
+        self.assertFalse(hit_exception, 'even trying to run main help does not work')

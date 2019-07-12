@@ -25,5 +25,10 @@ setup(
     author_email='dmlb2000@gmail.com',
     packages=find_packages(),
     namespace_packages=['pacifica'],
-    install_requires=[str(ir.req) for ir in INSTALL_REQS]
+    install_requires=[str(ir.req) for ir in INSTALL_REQS],
+    entry_points={
+        'console_scripts': [
+            'pacifica-elasticsearch=pacifica.elasticsearch.__main__:main',
+        ],
+    },
 )

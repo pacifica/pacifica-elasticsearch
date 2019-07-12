@@ -2,6 +2,6 @@
 coverage
 pep257
 pre-commit
-pylint
+pylint<2
 pytest
 setuptools
