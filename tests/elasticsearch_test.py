@@ -22,3 +22,16 @@ class TestElasticsearch(TestCase):
         self.assertEqual(resp.json()['indices']['pacifica_search']['primaries']['docs']['count'], 44)
         resp = requests.get('http://localhost:9200/pacifica_search/doc/transactions_67')
         self.assertEqual(resp.status_code, 200)
+
+    def test_main_celery(self):
+        """Test the add method in example class."""
+        main('--objects-per-page', '4', '--celery',
+             '--exclude', 'keys.key=temp_f', '--time-ago', '3650 days after')
+        sleep(3)
+        resp = requests.post('http://localhost:9200/pacifica_search/_flush/synced')
+        self.assertEqual(resp.status_code, 200)
+        resp = requests.get('http://localhost:9200/pacifica_search/_stats')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['indices']['pacifica_search']['primaries']['docs']['count'], 44)
+        resp = requests.get('http://localhost:9200/pacifica_search/doc/transactions_67')
+        self.assertEqual(resp.status_code, 200)

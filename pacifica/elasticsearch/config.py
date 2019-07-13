@@ -37,6 +37,11 @@ def get_config():
         'policy', 'doi_url_format',
         getenv('DOI_URL_FORMAT', 'https://dx.doi.org/{doi}')
     )
+    configparser.add_section('celery')
+    configparser.set('celery', 'broker_url', getenv(
+        'BROKER_URL', 'pyamqp://'))
+    configparser.set('celery', 'backend_url', getenv(
+        'BACKEND_URL', 'rpc://'))
     configparser.add_section('elasticsearch')
     configparser.set('elasticsearch', 'cache_size', getenv(
         'CACHE_SIZE', '10000'))

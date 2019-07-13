@@ -47,6 +47,11 @@ def searchsync_options(searchsync_parser):
         help='only objects newer than X days ago (i.e. --time-ago="7 days ago").',
         required=False, default=timedelta(days=36500)
     )
+    searchsync_parser.add_argument(
+        '--celery', dest='celery', action='store_true',
+        help='send work to celery queue instead of threads',
+        required=False, default=False
+    )
     searchsync_parser.set_defaults(func=search_sync)
 
 
@@ -63,4 +68,4 @@ def main(*argv):
     args = parser.parse_args(argv)
     if args.verbose:  # pragma: no cover this is for debugging
         LOGGER.setLevel('DEBUG')
-    args.func(args)
+    return args.func(args)

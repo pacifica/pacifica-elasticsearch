@@ -3,6 +3,7 @@ dist: xenial
 services:
   - postgresql
   - elasticsearch
+  - redis-server
 python:
 - 3.6
 - 2.7
@@ -14,10 +15,15 @@ stages:
 script:
 - pip install .
 - cd tests
+- coverage run --include='*/site-packages/pacifica/elasticsearch/*' -p -m celery -A pacifica.elasticsearch.tasks worker -l info &
 - coverage run --include='*/site-packages/pacifica/elasticsearch/*' -m pytest -xsv
+- celery -A pacifica.elasticsearch.tasks control shutdown || true
+- coverage combine -a .coverage*
 - coverage report -m --fail-under 100
 
 env:
+  BROKER_URL: redis://127.0.0.1:6379/0
+  BACKEND_URL: redis://127.0.0.1:6379/0
   NOTIFICATIONS_DISABLED: True
   PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
   ADMIN_USER_ID: 10
@@ -64,3 +70,4 @@ jobs:
 
 install:
 - pip install -r requirements-dev.txt
+- pip install redis
