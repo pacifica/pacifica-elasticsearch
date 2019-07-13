@@ -3,6 +3,8 @@
 """Celery work queue interface."""
 from __future__ import absolute_import
 
+# pylint: disable=too-few-public-methods
+
 
 class CeleryQueue:
     """Class to implement the queue interface."""
@@ -20,3 +22,4 @@ class CeleryQueue:
         if not job_dict['object'] in self.by_obj_type:
             self.by_obj_type[job_dict['object']] = []
         self.by_obj_type[job_dict['object']].append((job_dict, result))
+# pylint: enable=too-few-public-methods

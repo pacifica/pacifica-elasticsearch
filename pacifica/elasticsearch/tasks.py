@@ -13,6 +13,7 @@ ES_APP = Celery(
     backend=get_config().get('celery', 'backend_url')
 )
 
+
 @ES_APP.task()
 def work_on_job(job):
     """Work on a job."""
