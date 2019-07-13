@@ -14,7 +14,8 @@ ES_APP = Celery(
 )
 
 
+# Coverage doesn't seem to be catching this.
 @ES_APP.task()
-def work_on_job(job):
+def work_on_job(job):  # pragma: no cover
     """Work on a job."""
     return try_doing_work(ES_CLI, job)
