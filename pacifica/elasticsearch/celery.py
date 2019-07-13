@@ -44,9 +44,12 @@ class CeleryQueue(object):
         complete ones and updating instead of blocking on a job
         waiting for it to complete.
         """
+        success = True
         for object_index in trange(len(SYNC_OBJECTS), desc='Total Completed'):
             object_name = SYNC_OBJECTS[object_index]
             job_list = self.by_obj_type[object_name]
             for job_index in trange(len(job_list), desc='Total {} Completed'.format(object_name)):
                 _job_dict, result = self.by_obj_type[object_name][job_index]
-                result.get()
+                if not result.get():  # pragma: no cover failure testing is hard
+                    success = False
+        return success

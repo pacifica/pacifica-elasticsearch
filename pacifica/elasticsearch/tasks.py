@@ -17,4 +17,4 @@ ES_APP = Celery(
 @ES_APP.task()
 def work_on_job(job):
     """Work on a job."""
-    try_doing_work(ES_CLI, job)
+    return try_doing_work(ES_CLI, job)

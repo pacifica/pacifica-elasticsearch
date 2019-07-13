@@ -3,7 +3,7 @@ dist: xenial
 services:
   - postgresql
   - elasticsearch
-  - rabbitmq
+  - redis-server
 python:
 - 3.6
 - 2.7
@@ -22,6 +22,8 @@ script:
 - coverage report -m --fail-under 100
 
 env:
+  BROKER_URL: redis://127.0.0.1:6379/0
+  BACKEND_URL: redis://127.0.0.1:6379/0
   NOTIFICATIONS_DISABLED: True
   PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
   ADMIN_USER_ID: 10
@@ -68,3 +70,4 @@ jobs:
 
 install:
 - pip install -r requirements-dev.txt
+- pip install redis

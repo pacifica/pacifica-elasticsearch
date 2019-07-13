@@ -68,4 +68,4 @@ def main(*argv):
     args = parser.parse_args(argv)
     if args.verbose:  # pragma: no cover this is for debugging
         LOGGER.setLevel('DEBUG')
-    args.func(args)
+    return args.func(args)

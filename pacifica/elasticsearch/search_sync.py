@@ -262,10 +262,10 @@ def search_sync(args):
         work_threads = create_worker_threads(args.threads, work_queue)
     generate_work(args.items_per_page, work_queue, args.time_ago, args.exclude)
     if args.celery:
-        work_queue.progress()
+        return work_queue.progress()
     else:
         for _i in range(args.threads):
             work_queue.put(False)
         for wthread in work_threads:
             wthread.join()
-        work_queue.join()
+        return work_queue.join()
