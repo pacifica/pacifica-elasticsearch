@@ -3,6 +3,7 @@ dist: xenial
 services:
   - postgresql
   - elasticsearch
+  - rabbitmq
 python:
 - 3.6
 - 2.7
@@ -14,7 +15,10 @@ stages:
 script:
 - pip install .
 - cd tests
+- coverage run --include='*/site-packages/pacifica/elasticsearch/*' -p -m celery -A pacifica.elasticsearch.tasks worker -l info &
 - coverage run --include='*/site-packages/pacifica/elasticsearch/*' -m pytest -xsv
+- celery -A pacifica.elasticsearch.tasks control shutdown || true
+- coverage combine -a .coverage*
 - coverage report -m --fail-under 100
 
 env:

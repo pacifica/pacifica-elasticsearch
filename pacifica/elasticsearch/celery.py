@@ -2,11 +2,23 @@
 # -*- coding: utf-8 -*-
 """Celery work queue interface."""
 from __future__ import absolute_import
+from tqdm import trange
 
-# pylint: disable=too-few-public-methods
+
+SYNC_OBJECTS = [
+    'keys',
+    'values',
+    'relationships',
+    'transactions',
+    'projects',
+    'users',
+    'instruments',
+    'institutions',
+    'groups'
+]
 
 
-class CeleryQueue:
+class CeleryQueue(object):
     """Class to implement the queue interface."""
 
     def __init__(self):
@@ -22,4 +34,19 @@ class CeleryQueue:
         if not job_dict['object'] in self.by_obj_type:
             self.by_obj_type[job_dict['object']] = []
         self.by_obj_type[job_dict['object']].append((job_dict, result))
-# pylint: enable=too-few-public-methods
+
+    def progress(self):
+        """
+        Display progress bars on all items working.
+
+        This is going to do the naive thing for now, a better
+        solution would be to dynamically walk all jobs finding
+        complete ones and updating instead of blocking on a job
+        waiting for it to complete.
+        """
+        for object_index in trange(len(SYNC_OBJECTS), desc='Total Completed'):
+            object_name = SYNC_OBJECTS[object_index]
+            job_list = self.by_obj_type[object_name]
+            for job_index in trange(len(job_list), desc='Total {} Completed'.format(object_name)):
+                _job_dict, result = self.by_obj_type[object_name][job_index]
+                result.get()

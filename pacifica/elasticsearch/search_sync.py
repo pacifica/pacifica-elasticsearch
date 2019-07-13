@@ -14,22 +14,11 @@ from datetime import datetime
 from elasticsearch import Elasticsearch, ElasticsearchException, helpers
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from .config import get_config
-from .celery import CeleryQueue
+from .celery import CeleryQueue, SYNC_OBJECTS
 from .search_render import ELASTIC_INDEX, SearchRender
 
 ELASTIC_CONNECT_ATTEMPTS = 40
 ELASTIC_WAIT = 3
-SYNC_OBJECTS = [
-    'keys',
-    'values',
-    'relationships',
-    'transactions',
-    'projects',
-    'users',
-    'instruments',
-    'institutions',
-    'groups'
-]
 
 
 def es_client():
@@ -272,7 +261,9 @@ def search_sync(args):
         work_queue = Queue(32)
         work_threads = create_worker_threads(args.threads, work_queue)
     generate_work(args.items_per_page, work_queue, args.time_ago, args.exclude)
-    if not args.celery:
+    if args.celery:
+        work_queue.progress()
+    else:
         for _i in range(args.threads):
             work_queue.put(False)
         for wthread in work_threads:
