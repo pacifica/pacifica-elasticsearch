@@ -1,0 +1,216 @@
+{
+  "properties": {
+    "_source": {
+      "properties": {
+        "access_url": {
+          "const": "https://dx.doi.org/10.25584/data.2018-03.127/123456"
+        },
+        "created_date": {
+          "const": "2017-07-15T00:00:00"
+        },
+        "has_doi": {
+          "const": "true"
+        },
+        "institutions": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "University of Washington\u00e9"
+              },
+              "keyword": {
+                "const": "University of Washington\u00e9"
+              },
+              "obj_id": {
+                "const": "institutions_47"
+              },
+              "type": {
+                "const": "institutions"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "instrument_groups": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "nmr_instrum\u00e9nts"
+              },
+              "keyword": {
+                "const": "nmr_instrum\u00e9nts"
+              },
+              "obj_id": {
+                "const": "groups_1001"
+              },
+              "type": {
+                "const": "groups"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "instruments": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
+              },
+              "key_value_pairs": {
+                "properties": {
+                  "key_value_hash": {
+                    "properties": {
+                      "temp_f": {
+                        "const": "19"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "key_value_objs": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "const": "temp_f"
+                        },
+                        "value": {
+                          "const": "19"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "keyword": {
+                "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
+              },
+              "long_name": {
+                "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
+              },
+              "obj_id": {
+                "const": "instruments_54"
+              },
+              "type": {
+                "const": "instruments"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "key_value_pairs": {
+          "properties": {
+            "key_value_hash": {
+              "properties": {
+                "temp_f": {
+                  "const": "27"
+                }
+              },
+              "type": "object"
+            },
+            "key_value_objs": {
+              "items": {
+                "properties": {
+                  "key": {
+                    "const": "temp_f"
+                  },
+                  "value": {
+                    "const": "27"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "obj_id": {
+          "const": "transactions_67"
+        },
+        "projects": {
+          "items": {
+            "properties": {
+              "abstract": {
+                "const": "This is a currently active project with a set end date but no clos\u00e9d date"
+              },
+              "display_name": {
+                "const": "Pacifica D\u00e9velopment (active no close)"
+              },
+              "keyword": {
+                "const": "Pacifica D\u00e9velopment (active no close)"
+              },
+              "long_name": {
+                "const": ""
+              },
+              "obj_id": {
+                "const": "projects_1234a"
+              },
+              "title": {
+                "const": "Pacifica D\u00e9velopment (active no close)"
+              },
+              "type": {
+                "const": "projects"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "release": {
+          "const": "true"
+        },
+        "science_themes": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "g\u00e9neral"
+              },
+              "obj_id": {
+                "const": "science_themes_g\u00e9neral"
+              },
+              "type": {
+                "const": "science_themes"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "transactions"
+        },
+        "users": {
+          "properties": {
+            "submitter": {
+              "items": {
+                "properties": {
+                  "display_name": {
+                    "const": "Brown\u00e9 Jr, David\u00e9 "
+                  },
+                  "keyword": {
+                    "const": "Brown\u00e9 Jr, David\u00e9 "
+                  },
+                  "obj_id": {
+                    "const": "users_10"
+                  },
+                  "type": {
+                    "const": "users"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "type": "object"
+}

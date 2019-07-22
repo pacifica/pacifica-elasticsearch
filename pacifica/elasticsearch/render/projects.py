@@ -3,6 +3,7 @@
 """Search transaction rendering methods."""
 from six import text_type
 from .base import SearchBase
+from .users import UsersRender
 
 
 class ProjectsRender(SearchBase):
@@ -12,6 +13,10 @@ class ProjectsRender(SearchBase):
         'obj_id', 'display_name', 'abstract', 'title',
         'keyword', 'release', 'closed_date', 'actual_end_date',
         'updated_date', 'created_date', 'actual_start_date'
+    ]
+
+    rel_objs = [
+        'users'
     ]
 
     @staticmethod
@@ -85,3 +90,16 @@ class ProjectsRender(SearchBase):
             'transactions_{}'.format(trans_id)
             for trans_id in cls._transsip_transsap_merge({'project': proj_obj['_id']}, '_id')
         ]
+
+    @classmethod
+    def users_obj_lists(cls, **proj_obj):
+        """Get the user objects and relationships."""
+        ret = {}
+        for proj_user_obj in cls.get_rel_by_args('project_user', project=proj_obj['_id']):
+            rel_obj = cls.get_rel_by_args('relationships', uuid=proj_user_obj['relationship'])[0]
+            rel_list = ret.get(rel_obj['name'], [])
+            rel_list.append(
+                UsersRender.render(cls.get_rel_by_args('users', _id=proj_user_obj['user'])[0])
+            )
+            ret[rel_obj['name']] = rel_list
+        return ret

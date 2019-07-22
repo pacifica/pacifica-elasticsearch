@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Test the elasticsearch module."""
+import os
 from unittest import TestCase
 from time import sleep
+import json
+import jsonschema
 import requests
 from pacifica.elasticsearch.__main__ import main
 
@@ -35,3 +38,19 @@ class TestElasticsearch(TestCase):
         self.assertEqual(resp.json()['indices']['pacifica_search']['primaries']['docs']['count'], 44)
         resp = requests.get('http://localhost:9200/pacifica_search/doc/transactions_67')
         self.assertEqual(resp.status_code, 200)
+
+    def test_document_formats(self):
+        """Verify a project document is of a specific format."""
+        self.test_main()
+        patterns = {
+            'transactions_67': 'transaction_jsonschema.json',
+            'projects_1234a': 'project_jsonschema.json'
+        }
+        for obj_id, schema_file in patterns.items():
+            json_schema = json.loads(open(os.path.join(os.path.dirname(__file__), schema_file)).read())
+            resp = requests.get('http://localhost:9200/pacifica_search/doc/{}'.format(obj_id))
+            self.assertEqual(
+                resp.status_code, 200, '{} did not have a correct status code {}'.format(obj_id, resp.status_code)
+            )
+            json_data = resp.json()
+            jsonschema.validate(json_data, json_schema)
