@@ -28,7 +28,9 @@ class CeleryQueue(object):
 
     def put(self, job_dict):
         """Save job dictionary and run job."""
+        # pylint: disable=cyclic-import
         from .tasks import work_on_job
+        # pylint: enable=cyclic-import
         result = work_on_job.delay(job_dict)
         self.all_jobs.append((job_dict, result))
         if not job_dict['object'] in self.by_obj_type:
