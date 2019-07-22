@@ -11,12 +11,15 @@ except ImportError:  # pragma: no cover
     from queue import Queue
 from math import ceil
 from datetime import datetime
+try:
+    from itertools import zip_longest
+except ImportError:  # pragma: no cover python 2
+    from itertools import izip_longest as zip_longest
 from elasticsearch import Elasticsearch, ElasticsearchException, helpers
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from .config import get_config
 from .celery import CeleryQueue, SYNC_OBJECTS
 from .search_render import ELASTIC_INDEX, SearchRender
-from itertools import zip_longest
 
 ELASTIC_CONNECT_ATTEMPTS = 40
 ELASTIC_WAIT = 3
@@ -230,22 +233,19 @@ def create_worker_threads(threads, work_queue):
 
 def generate_work(items_per_page, work_queue, time_ago, exclude):
     """Generate the work from the db and send it to the work queue."""
-    now = datetime.now()
-    time_delta = (now - time_ago).replace(microsecond=0)
-    work=[]
+    time_delta = (datetime.now() - time_ago).replace(microsecond=0)
+    work = []
     for obj in SYNC_OBJECTS:
-        q=[]
-        work.append(q)
+        obj_q = []
         for time_field in ['created', 'updated']:
             kwargs = {
                 time_field: time_delta.isoformat(),
                 '{}_operator'.format(time_field): 'gt'
             }
             resp = ObjectInfoAPI.GET(obj, None, **kwargs)
-            total_count = resp['record_count']
-            num_pages = int(ceil(float(total_count) / items_per_page))
+            num_pages = int(ceil(float(resp['record_count']) / items_per_page))
             for page in range(1, num_pages + 1):
-                work_queue.put({
+                obj_q.append({
                     'object': obj,
                     'time_field': time_field,
                     'page': page,
@@ -254,10 +254,11 @@ def generate_work(items_per_page, work_queue, time_ago, exclude):
                     'num_pages': num_pages+1,
                     'exclude': list(exclude)
                 })
-    for slice in zip_longest(*work,fillvalue=None):
-       for item in slice:
-           if item:
-               work_queue.put(item)
+        work.append(obj_q)
+    for work_slice in zip_longest(*work, fillvalue=None):
+        for item in work_slice:
+            if item:
+                work_queue.put(item)
 
 
 def search_sync(args):
