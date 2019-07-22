@@ -15,7 +15,7 @@ class TestElasticsearch(TestCase):
 
     def test_main_errors(self):
         """Test some of the command line failure conditions."""
-        with self.assertRaises(ValueError, msg="blarg is not a valid object to sync"):
+        with self.assertRaises(ValueError, msg='blarg is not a valid object to sync'):
             object_options('blarg')
         with self.assertRaises(ValueError, msg='blarg is not a valid date to compare objects to'):
             cmp_date_options('blarg')
