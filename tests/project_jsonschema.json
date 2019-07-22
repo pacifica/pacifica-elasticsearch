@@ -14,9 +14,6 @@
         "closed_date": {
           "const": null
         },
-        "created_date": {
-          "const": "2019-07-22T16:11:27"
-        },
         "display_name": {
           "const": "Pacifica D\u00e9velopment (active no close)"
         },
