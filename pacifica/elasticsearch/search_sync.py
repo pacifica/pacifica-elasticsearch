@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover python 2
 from elasticsearch import Elasticsearch, ElasticsearchException, helpers
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from .config import get_config
-from .celery import CeleryQueue, SYNC_OBJECTS
+from .celery import CeleryQueue
 from .search_render import ELASTIC_INDEX, SearchRender
 
 ELASTIC_CONNECT_ATTEMPTS = 40
@@ -231,28 +231,28 @@ def create_worker_threads(threads, work_queue):
     return work_threads
 
 
-def generate_work(items_per_page, work_queue, time_ago, exclude):
+def generate_work(args, work_queue):
     """Generate the work from the db and send it to the work queue."""
-    time_delta = (datetime.now() - time_ago).replace(microsecond=0)
+    time_delta = (datetime.now() - args.time_ago).replace(microsecond=0)
     work = []
-    for obj in SYNC_OBJECTS:
+    for obj in args.objects:
         obj_q = []
-        for time_field in ['created', 'updated']:
+        for time_field in args.compare_dates:
             kwargs = {
                 time_field: time_delta.isoformat(),
                 '{}_operator'.format(time_field): 'gt'
             }
             resp = ObjectInfoAPI.GET(obj, None, **kwargs)
-            num_pages = int(ceil(float(resp['record_count']) / items_per_page))
+            num_pages = int(ceil(float(resp['record_count']) / args.items_per_page))
             for page in range(1, num_pages + 1):
                 obj_q.append({
                     'object': obj,
                     'time_field': time_field,
                     'page': page,
-                    'items_per_page': items_per_page,
+                    'items_per_page': args.items_per_page,
                     'time_delta': time_delta,
                     'num_pages': num_pages+1,
-                    'exclude': list(exclude)
+                    'exclude': list(args.exclude)
                 })
         work.append(obj_q)
     for work_slice in zip_longest(*work, fillvalue=None):
@@ -269,7 +269,7 @@ def search_sync(args):
     else:
         work_queue = Queue(32)
         work_threads = create_worker_threads(args.threads, work_queue)
-    generate_work(args.items_per_page, work_queue, args.time_ago, args.exclude)
+    generate_work(args, work_queue)
     if args.celery:
         return work_queue.progress()
     for _i in range(args.threads):
