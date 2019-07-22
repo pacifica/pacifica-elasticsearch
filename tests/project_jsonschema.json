@@ -38,17 +38,11 @@
         "type": {
           "const": "projects"
         },
-        "updated_date": {
-          "const": "2019-07-22T16:11:27"
-        },
         "users": {
           "properties": {
             "t\u00e9st_rel_1": {
               "items": {
                 "properties": {
-                  "created_date": {
-                    "const": "2019-07-22T16:11:27"
-                  },
                   "display_name": {
                     "const": "Brown\u00e9 Jr, David\u00e9 "
                   },
@@ -63,9 +57,6 @@
                   },
                   "type": {
                     "const": "users"
-                  },
-                  "updated_date": {
-                    "const": "2019-07-22T16:11:27"
                   }
                 },
                 "type": "object"
