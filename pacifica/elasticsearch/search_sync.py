@@ -271,7 +271,7 @@ def search_sync(args):
         work_threads = create_worker_threads(args.threads, work_queue)
     generate_work(args, work_queue)
     if args.celery:
-        return work_queue.progress()
+        return work_queue.progress(args)
     for _i in range(args.threads):
         work_queue.put(False)
     for wthread in work_threads:
