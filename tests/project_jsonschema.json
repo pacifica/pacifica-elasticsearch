@@ -29,6 +29,9 @@
         "title": {
           "const": "Pacifica D\u00e9velopment (active no close)"
         },
+        "transaction_count": {
+          "const": 2
+        },
         "transaction_ids": {
           "items": {
             "type": "string"

@@ -71,5 +71,7 @@ class SearchBase(object):
             for related_obj_name in cls.rel_objs:
                 ret[related_obj_name] = getattr(cls, '{}_obj_lists'.format(related_obj_name))(**obj)
         if render_trans_ids:
-            ret['transaction_ids'] = cls.get_transactions(**obj)
+            trans_id_list = cls.get_transactions(**obj)
+            ret['transaction_ids'] = trans_id_list
+            ret['transaction_count'] = len(trans_id_list)
         return ret
