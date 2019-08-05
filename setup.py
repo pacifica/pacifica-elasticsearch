@@ -26,6 +26,8 @@ setup(
     packages=find_packages(include=['pacifica.*']),
     namespace_packages=['pacifica'],
     install_requires=[str(ir.req) for ir in INSTALL_REQS],
+    include_package_data=True,
+    package_data={'': ['*.json']},
     entry_points={
         'console_scripts': [
             'pacifica-elasticsearch=pacifica.elasticsearch.__main__:main',

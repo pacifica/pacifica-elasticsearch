@@ -1,0 +1,121 @@
+{
+  "properties": {
+    "created_date": {
+      "type": "date"
+    },
+    "description": {
+      "type": "keyword"
+    },
+    "files": {
+      "properties": {
+        "created_date": {
+          "type": "date"
+        },
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "groups": {
+      "properties": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "has_doi": {
+      "fielddata": true,
+      "type": "text"
+    },
+    "institutions": {
+      "properties": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "instruments": {
+      "properties": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "key": {
+      "type": "keyword"
+    },
+    "key_value_pairs": {
+      "properties": {
+        "key": {
+          "type": "keyword"
+        },
+        "value": {
+          "type": "keyword"
+        }
+      }
+    },
+    "keyword": {
+      "type": "keyword"
+    },
+    "projects": {
+      "properties": {
+        "actual_end_date": {
+          "type": "date"
+        },
+        "actual_start_date": {
+          "type": "date"
+        },
+        "closed_date": {
+          "type": "date"
+        },
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "release": {
+      "type": "keyword"
+    },
+    "science_themes": {
+      "properties": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "transaction_ids": {
+      "fielddata": true,
+      "type": "text"
+    },
+    "type": {
+      "type": "keyword"
+    },
+    "updated_date": {
+      "type": "date"
+    },
+    "users": {
+      "properties": {
+        "authorized_releaser": {
+          "properties": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        },
+        "keyword": {
+          "type": "keyword"
+        },
+        "submitter": {
+          "properties": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "value": {
+      "type": "keyword"
+    }
+  }
+}

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """Sync the database to elasticsearch index for use by Searching tools."""
 from __future__ import print_function, absolute_import
-from json import dumps
+import os
+from json import dumps, loads
 from time import sleep
 from threading import Thread
 try:
@@ -37,121 +38,7 @@ def es_client():
         [get_config().get('elasticsearch', 'url')],
         **es_kwargs
     )
-    mapping_params = {
-        'properties': {
-            'key': {'type': 'keyword'},
-            'value': {'type': 'keyword'},
-            'key_value_pairs': {
-                'properties': {
-                    'key': {'type': 'keyword'},
-                    'value': {'type': 'keyword'}
-                }
-            },
-            'release': {
-                'type': 'keyword'
-            },
-            'updated_date': {
-                'type': 'date'
-            },
-            'created_date': {
-                'type': 'date'
-            },
-            'transaction_ids': {
-                'type':     'text',
-                'fielddata': True
-            },
-            'has_doi': {
-                'type':      'text',
-                'fielddata': True
-            },
-            'description': {
-                'type': 'keyword'
-            },
-            'type': {
-                'type': 'keyword'
-            },
-            'keyword': {
-                'type': 'keyword'
-            },
-            'users': {
-                'properties': {
-                    'keyword': {
-                        'type': 'keyword'
-                    },
-                    'submitter': {
-                        'properties': {
-                            'keyword': {
-                                'type': 'keyword'
-                            }
-                        }
-                    },
-                    'authorized_releaser': {
-                        'properties': {
-                            'keyword': {
-                                'type': 'keyword'
-                            }
-                        }
-                    }
-                }
-            },
-            'instruments': {
-                'properties': {
-                    'keyword': {
-                        'type': 'keyword'
-                    }
-                }
-            },
-            'projects': {
-                'properties': {
-                    'keyword': {
-                        'type': 'keyword'
-                    },
-                    'closed_date': {
-                        'type': 'date'
-                    },
-                    'actual_start_date': {
-                        'type': 'date'
-                    },
-                    'actual_end_date': {
-                        'type': 'date'
-                    }
-                }
-            },
-            'institutions': {
-                'properties': {
-                    'keyword': {
-                        'type': 'keyword'
-                    },
-
-                }
-            },
-            'science_themes': {
-                'properties': {
-                    'keyword': {
-                        'type': 'keyword'
-                    },
-
-                }
-            },
-            'groups': {
-                'properties': {
-                    'keyword': {
-                        'type': 'keyword'
-                    },
-                }
-            },
-            'files': {
-                'properties': {
-                    'keyword': {
-                        'type': 'keyword'
-                    },
-                    'created_date': {
-                        'type': 'date'
-                    }
-                }
-            }
-        }
-    }
+    mapping_params = loads(open(os.path.join(os.path.dirname(__file__), 'mapping.json')).read())
     # pylint: disable=unexpected-keyword-arg
     esclient.indices.create(index=ELASTIC_INDEX, ignore=400)
     esclient.indices.put_mapping(
