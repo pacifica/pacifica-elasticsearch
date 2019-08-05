@@ -1,4 +1,15 @@
 {
+  "dynamic_templates": [
+    {
+      "relationships_as_keywords": {
+        "mapping": {
+          "type": "keyword"
+        },
+        "match_mapping_type": "string",
+        "path_match": "users.*.keyword"
+      }
+    }
+  ],
   "properties": {
     "created_date": {
       "type": "date"
@@ -95,22 +106,8 @@
     },
     "users": {
       "properties": {
-        "authorized_releaser": {
-          "properties": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
-        },
         "keyword": {
           "type": "keyword"
-        },
-        "submitter": {
-          "properties": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
         }
       }
     },

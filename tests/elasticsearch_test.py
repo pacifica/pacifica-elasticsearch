@@ -76,3 +76,9 @@ class TestElasticsearch(TestCase):
             )
             json_data = resp.json()
             jsonschema.validate(json_data, json_schema)
+
+    def test_keyword_query(self):
+        """Test the keyword query for users."""
+        post_data = json.loads(open(os.path.join(os.path.dirname(__file__), 'issue_9.json')).read())
+        resp = requests.post('http://localhost:9200/_search', json=post_data)
+        self.assertEqual(resp.status_code, 200, 'Bad response code 200 != {}'.format(resp.status_code))
