@@ -17,6 +17,96 @@
         "display_name": {
           "const": "Pacifica D\u00e9velopment (active no close)"
         },
+        "institutions": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "University of Washington\u00e9"
+              },
+              "keyword": {
+                "const": "University of Washington\u00e9"
+              },
+              "obj_id": {
+                "const": "institutions_47"
+              },
+              "type": {
+                "const": "institutions"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "instrument_groups": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "nmr_instrum\u00e9nts"
+              },
+              "keyword": {
+                "const": "nmr_instrum\u00e9nts"
+              },
+              "obj_id": {
+                "const": "groups_1001"
+              },
+              "type": {
+                "const": "groups"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "instruments": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
+              },
+              "key_value_pairs": {
+                "properties": {
+                  "key_value_hash": {
+                    "properties": {
+                      "temp_f": {
+                        "const": "19"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "key_value_objs": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "const": "temp_f"
+                        },
+                        "value": {
+                          "const": "19"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "keyword": {
+                "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
+              },
+              "long_name": {
+                "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
+              },
+              "obj_id": {
+                "const": "instruments_54"
+              },
+              "type": {
+                "const": "instruments"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
         "keyword": {
           "const": "Pacifica D\u00e9velopment (active no close)"
         },
@@ -25,6 +115,23 @@
         },
         "release": {
           "const": "true"
+        },
+        "science_themes": {
+          "items": {
+            "properties": {
+              "display_name": {
+                "const": "g\u00e9neral"
+              },
+              "obj_id": {
+                "const": "science_themes_g\u00e9neral"
+              },
+              "type": {
+                "const": "science_themes"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
         },
         "title": {
           "const": "Pacifica D\u00e9velopment (active no close)"

@@ -11,26 +11,6 @@
         "has_doi": {
           "const": "true"
         },
-        "institutions": {
-          "items": {
-            "properties": {
-              "display_name": {
-                "const": "University of Washington\u00e9"
-              },
-              "keyword": {
-                "const": "University of Washington\u00e9"
-              },
-              "obj_id": {
-                "const": "institutions_47"
-              },
-              "type": {
-                "const": "institutions"
-              }
-            },
-            "type": "object"
-          },
-          "type": "array"
-        },
         "instrument_groups": {
           "items": {
             "properties": {
@@ -162,23 +142,6 @@
         },
         "release": {
           "const": "true"
-        },
-        "science_themes": {
-          "items": {
-            "properties": {
-              "display_name": {
-                "const": "g\u00e9neral"
-              },
-              "obj_id": {
-                "const": "science_themes_g\u00e9neral"
-              },
-              "type": {
-                "const": "science_themes"
-              }
-            },
-            "type": "object"
-          },
-          "type": "array"
         },
         "type": {
           "const": "transactions"
