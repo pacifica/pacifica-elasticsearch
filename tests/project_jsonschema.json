@@ -122,6 +122,9 @@
               "display_name": {
                 "const": "g\u00e9neral"
               },
+              "keyword": {
+                "const": "g\u00e9neral"
+              },
               "obj_id": {
                 "const": "science_themes_g\u00e9neral"
               },
