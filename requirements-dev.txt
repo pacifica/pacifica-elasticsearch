@@ -6,4 +6,5 @@ pep257
 pre-commit
 pylint<2
 pytest
+redis
 setuptools
