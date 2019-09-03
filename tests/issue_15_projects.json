@@ -1,6 +1,9 @@
 {
   "aggs": {
-    "project": {
+    "project3": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "obj_id.keyword": {
           "terms": {
@@ -15,7 +18,10 @@
         }
       }
     },
-    "transaction_count": {
+    "transaction_count5": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "transaction_count": {
           "range": {
@@ -48,7 +54,10 @@
         }
       }
     },
-    "principal_investigator": {
+    "principal_investigator8": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "users.principle_investigator.keyword": {
           "terms": {
@@ -63,7 +72,10 @@
         }
       }
     },
-    "co_principal_investigator": {
+    "co_principal_investigator9": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "users.co_principle_investigator.keyword": {
           "terms": {
@@ -78,7 +90,10 @@
         }
       }
     },
-    "member_of": {
+    "member_of10": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "users.member_of.keyword": {
           "terms": {
@@ -93,7 +108,10 @@
         }
       }
     },
-    "science_theme": {
+    "science_theme11": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "science_themes.keyword": {
           "terms": {
@@ -108,7 +126,10 @@
         }
       }
     },
-    "institution": {
+    "institution12": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "institutions.keyword": {
           "terms": {
@@ -123,7 +144,10 @@
         }
       }
     },
-    "instruments": {
+    "instruments13": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "instruments.keyword": {
           "terms": {
@@ -138,7 +162,10 @@
         }
       }
     },
-    "groups": {
+    "groups14": {
+      "filter": {
+        "match_all": {}
+      },
       "aggs": {
         "groups.keyword": {
           "terms": {

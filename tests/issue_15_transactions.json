@@ -1,6 +1,6 @@
 {
   "aggs": {
-    "release_data": {
+    "release_data3": {
       "filter": {
         "match_all": {}
       },
@@ -18,7 +18,7 @@
         }
       }
     },
-    "doi": {
+    "doi4": {
       "filter": {
         "match_all": {}
       },
@@ -36,7 +36,7 @@
         }
       }
     },
-    "instruments": {
+    "instruments6": {
       "filter": {
         "match_all": {}
       },
@@ -54,7 +54,7 @@
         }
       }
     },
-    "groups": {
+    "groups7": {
       "filter": {
         "match_all": {}
       },
@@ -72,7 +72,7 @@
         }
       }
     },
-    "Tag": {
+    "Tag8": {
       "filter": {
         "match_all": {}
       },
@@ -90,7 +90,7 @@
         }
       }
     },
-    "omics.dms.experiment_name": {
+    "omics.dms.experiment_name9": {
       "filter": {
         "match_all": {}
       },
@@ -107,6 +107,60 @@
           }
         }
       }
+    },
+    "omics.dms.dataset_name10": {
+      "filter": {
+        "match_all": {}
+      },
+      "aggs": {
+        "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword"
+          }
+        }
+      }
+    },
+    "user_of_record11": {
+      "filter": {
+        "match_all": {}
+      },
+      "aggs": {
+        "key_value_pairs.key_value_hash.user_of_record.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.user_of_record.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.user_of_record.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.user_of_record.keyword"
+          }
+        }
+      }
+    },
+    "proxymod.version12": {
+      "filter": {
+        "match_all": {}
+      },
+      "aggs": {
+        "key_value_pairs.key_value_hash.proxymod.version.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.proxymod.version.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.proxymod.version.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.proxymod.version.keyword"
+          }
+        }
+      }
     }
   },
   "query": {
@@ -115,11 +169,6 @@
         {
           "term": {
             "type": "transactions"
-          }
-        },
-        {
-          "term": {
-            "_index": "pacifica_search_dmlb2000"
           }
         },
         {
