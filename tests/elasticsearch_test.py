@@ -2,16 +2,49 @@
 # -*- coding: utf-8 -*-
 """Test the elasticsearch module."""
 import os
+import sys
+import subprocess
 from unittest import TestCase
 from time import sleep
 import json
 import jsonschema
 import requests
+from celery.bin.celery import main as celery_main
 from pacifica.elasticsearch.__main__ import main, object_options, cmp_date_options
 
 
 class TestElasticsearch(TestCase):
     """Test the example class."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Setup the celery worker process."""
+        cls.celery_thread = subprocess.Popen([
+            sys.executable, '-m',
+            'celery', '-A', 'pacifica.elasticsearch.tasks', 'worker', '--pool', 'solo',
+            '-l', 'info', '--quiet', '-b', 'redis://127.0.0.1:6379/0'
+        ])
+        sleep(3)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Teardown and remove all messages."""
+        try:
+            celery_main([
+                'celery', '-A', 'pacifica.elasticsearch.tasks', 'control',
+                '-b', 'redis://127.0.0.1:6379/0', 'shutdown'
+            ])
+        except SystemExit:
+            pass
+        cls.celery_thread.communicate()
+        cls.celery_thread.wait()
+        try:
+            celery_main([
+                'celery', '-A', 'pacifica.elasticsearch.tasks', '-b', 'redis://127.0.0.1:6379/0',
+                '--force', 'purge'
+            ])
+        except SystemExit:
+            pass
 
     def test_main_errors(self):
         """Test some of the command line failure conditions."""
@@ -79,6 +112,14 @@ class TestElasticsearch(TestCase):
 
     def test_keyword_query(self):
         """Test the keyword query for users."""
-        post_data = json.loads(open(os.path.join(os.path.dirname(__file__), 'issue_9.json')).read())
-        resp = requests.post('http://localhost:9200/_search', json=post_data)
-        self.assertEqual(resp.status_code, 200, 'Bad response code 200 != {}'.format(resp.status_code))
+        for query_example in ['issue_9.json', 'issue_15_projects.json', 'issue_15_transactions.json']:
+            post_data = json.loads(open(os.path.join(os.path.dirname(__file__), query_example)).read())
+            resp = requests.post('http://localhost:9200/_search', json=post_data)
+            bad_message = """
+            Bad response code 200 != {}
+
+            Error output from body:
+
+            {}
+            """
+            self.assertEqual(resp.status_code, 200, bad_message.format(resp.status_code, resp.content))

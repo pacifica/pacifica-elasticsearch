@@ -1,81 +1,6 @@
 {
   "aggs": {
-    "release_data": {
-      "filter": {
-        "match_all": {}
-      },
-      "aggs": {
-        "release": {
-          "terms": {
-            "field": "release",
-            "size": 50
-          }
-        },
-        "release_count": {
-          "cardinality": {
-            "field": "release"
-          }
-        }
-      }
-    },
-    "doi": {
-      "filter": {
-        "match_all": {}
-      },
-      "aggs": {
-        "has_doi": {
-          "terms": {
-            "field": "has_doi",
-            "size": 50
-          }
-        },
-        "has_doi_count": {
-          "cardinality": {
-            "field": "has_doi"
-          }
-        }
-      }
-    },
-    "instruments": {
-      "filter": {
-        "match_all": {}
-      },
-      "aggs": {
-        "instruments.keyword": {
-          "terms": {
-            "field": "instruments.keyword",
-            "size": 10
-          }
-        },
-        "instruments.keyword_count": {
-          "cardinality": {
-            "field": "instruments.keyword"
-          }
-        }
-      }
-    },
-    "groups": {
-      "filter": {
-        "match_all": {}
-      },
-      "aggs": {
-        "groups.keyword": {
-          "terms": {
-            "field": "groups.keyword",
-            "size": 10
-          }
-        },
-        "groups.keyword_count": {
-          "cardinality": {
-            "field": "groups.keyword"
-          }
-        }
-      }
-    },
     "Tag": {
-      "filter": {
-        "match_all": {}
-      },
       "aggs": {
         "key_value_pairs.key_value_hash.Tag.keyword": {
           "terms": {
@@ -88,12 +13,66 @@
             "field": "key_value_pairs.key_value_hash.Tag.keyword"
           }
         }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "doi": {
+      "aggs": {
+        "has_doi": {
+          "terms": {
+            "field": "has_doi",
+            "size": 50
+          }
+        },
+        "has_doi_count": {
+          "cardinality": {
+            "field": "has_doi"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "groups": {
+      "aggs": {
+        "groups.keyword": {
+          "terms": {
+            "field": "groups.keyword",
+            "size": 10
+          }
+        },
+        "groups.keyword_count": {
+          "cardinality": {
+            "field": "groups.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "instruments": {
+      "aggs": {
+        "instruments.keyword": {
+          "terms": {
+            "field": "instruments.keyword",
+            "size": 10
+          }
+        },
+        "instruments.keyword_count": {
+          "cardinality": {
+            "field": "instruments.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
       }
     },
     "omics.dms.experiment_name": {
-      "filter": {
-        "match_all": {}
-      },
       "aggs": {
         "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword": {
           "terms": {
@@ -106,6 +85,27 @@
             "field": "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword"
           }
         }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "release_data": {
+      "aggs": {
+        "release": {
+          "terms": {
+            "field": "release",
+            "size": 50
+          }
+        },
+        "release_count": {
+          "cardinality": {
+            "field": "release"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
       }
     }
   },

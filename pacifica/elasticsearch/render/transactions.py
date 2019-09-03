@@ -6,11 +6,8 @@ from peewee import DoesNotExist
 from pacifica.metadata.orm import DOITransaction, TransactionUser
 from ..config import get_config
 from .users import UsersRender
-from .institutions import InstitutionsRender
 from .instruments import InstrumentsRender
-from .groups import GroupsRender
 from .projects import ProjectsRender
-from .science_themes import ScienceThemesRender
 from .keys import KeysRender
 from .values import ValuesRender
 from .files import FilesRender
@@ -25,8 +22,7 @@ class TransactionsRender(SearchBase):
         'updated_date', 'created_date', 'description'
     ]
     rel_objs = [
-        'users', 'institutions', 'instruments', 'groups',
-        'projects', 'science_themes', 'key_value_pairs', 'files'
+        'users', 'instruments', 'projects', 'key_value_pairs', 'files'
     ]
 
     @staticmethod
@@ -120,22 +116,6 @@ class TransactionsRender(SearchBase):
         return ret
 
     @classmethod
-    def institutions_obj_lists(cls, **trans_obj):
-        """Get the institutions related to the transaction."""
-        ret = set()
-        user_id_list = cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'submitter')
-        user_id_list.update([obj['user'] for obj in cls.get_rel_by_args(
-            'transaction_user', transaction=trans_obj['_id'])])
-        for user_id in user_id_list:
-            for inst_obj in cls.get_rel_by_args('institution_user', user=user_id):
-                ret.update([inst_obj['institution']])
-        return [
-            InstitutionsRender.render(
-                cls.get_rel_by_args('institutions', _id=inst_id)[0]
-            ) for inst_id in ret
-        ]
-
-    @classmethod
     def instruments_obj_lists(cls, **trans_obj):
         """Get the instruments related to the transaction."""
         ret = set()
@@ -148,32 +128,10 @@ class TransactionsRender(SearchBase):
         ]
 
     @classmethod
-    def groups_obj_lists(cls, **trans_obj):
-        """Get the instrument groups related to the transaction."""
-        ret = set()
-        for inst_obj in cls.get_rel_by_args('transsip', _id=trans_obj['_id']):
-            for group_obj in cls.get_rel_by_args('instrument_group', instrument=inst_obj['instrument']):
-                ret.update([group_obj['group']])
-        return [
-            GroupsRender.render(
-                cls.get_rel_by_args('groups', _id=group_id)[0]
-            ) for group_id in ret
-        ]
-
-    @classmethod
     def projects_obj_lists(cls, **trans_obj):
         """Get the projects related to the transaction."""
         return [
             ProjectsRender.render(
-                cls.get_rel_by_args('projects', _id=proj_id)[0]
-            ) for proj_id in cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'project')
-        ]
-
-    @classmethod
-    def science_themes_obj_lists(cls, **trans_obj):
-        """Get science themes related to the transaction."""
-        return [
-            ScienceThemesRender.render(
                 cls.get_rel_by_args('projects', _id=proj_id)[0]
             ) for proj_id in cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'project')
         ]

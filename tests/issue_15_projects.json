@@ -1,68 +1,5 @@
 {
   "aggs": {
-    "project": {
-      "aggs": {
-        "obj_id.keyword": {
-          "terms": {
-            "field": "obj_id.keyword",
-            "size": 10
-          }
-        },
-        "obj_id.keyword_count": {
-          "cardinality": {
-            "field": "obj_id.keyword"
-          }
-        }
-      }
-    },
-    "transaction_count": {
-      "aggs": {
-        "transaction_count": {
-          "range": {
-            "field": "transaction_count",
-            "ranges": [
-              {
-                "key": "All"
-              },
-              {
-                "key": "Up to 50",
-                "from": 1,
-                "to": 51
-              },
-              {
-                "key": "51 to 400",
-                "from": 51,
-                "to": 401
-              },
-              {
-                "key": "401 to 1000",
-                "from": 401,
-                "to": 1001
-              },
-              {
-                "key": "More than 1000",
-                "from": 1001
-              }
-            ]
-          }
-        }
-      }
-    },
-    "principal_investigator": {
-      "aggs": {
-        "users.principle_investigator.keyword": {
-          "terms": {
-            "field": "users.principle_investigator.keyword",
-            "size": 10
-          }
-        },
-        "users.principle_investigator.keyword_count": {
-          "cardinality": {
-            "field": "users.principle_investigator.keyword"
-          }
-        }
-      }
-    },
     "co_principal_investigator": {
       "aggs": {
         "users.co_principle_investigator.keyword": {
@@ -78,32 +15,17 @@
         }
       }
     },
-    "member_of": {
+    "groups": {
       "aggs": {
-        "users.member_of.keyword": {
+        "groups.keyword": {
           "terms": {
-            "field": "users.member_of.keyword",
+            "field": "groups.keyword",
             "size": 10
           }
         },
-        "users.member_of.keyword_count": {
+        "groups.keyword_count": {
           "cardinality": {
-            "field": "users.member_of.keyword"
-          }
-        }
-      }
-    },
-    "science_theme": {
-      "aggs": {
-        "science_themes.keyword": {
-          "terms": {
-            "field": "science_themes.keyword",
-            "size": 10
-          }
-        },
-        "science_themes.keyword_count": {
-          "cardinality": {
-            "field": "science_themes.keyword"
+            "field": "groups.keyword"
           }
         }
       }
@@ -138,17 +60,95 @@
         }
       }
     },
-    "groups": {
+    "member_of": {
       "aggs": {
-        "groups.keyword": {
+        "users.member_of.keyword": {
           "terms": {
-            "field": "groups.keyword",
+            "field": "users.member_of.keyword",
             "size": 10
           }
         },
-        "groups.keyword_count": {
+        "users.member_of.keyword_count": {
           "cardinality": {
-            "field": "groups.keyword"
+            "field": "users.member_of.keyword"
+          }
+        }
+      }
+    },
+    "principal_investigator": {
+      "aggs": {
+        "users.principle_investigator.keyword": {
+          "terms": {
+            "field": "users.principle_investigator.keyword",
+            "size": 10
+          }
+        },
+        "users.principle_investigator.keyword_count": {
+          "cardinality": {
+            "field": "users.principle_investigator.keyword"
+          }
+        }
+      }
+    },
+    "project": {
+      "aggs": {
+        "obj_id.keyword": {
+          "terms": {
+            "field": "obj_id.keyword",
+            "size": 10
+          }
+        },
+        "obj_id.keyword_count": {
+          "cardinality": {
+            "field": "obj_id.keyword"
+          }
+        }
+      }
+    },
+    "science_theme": {
+      "aggs": {
+        "science_themes.keyword": {
+          "terms": {
+            "field": "science_themes.keyword",
+            "size": 10
+          }
+        },
+        "science_themes.keyword_count": {
+          "cardinality": {
+            "field": "science_themes.keyword"
+          }
+        }
+      }
+    },
+    "transaction_count": {
+      "aggs": {
+        "transaction_count": {
+          "range": {
+            "field": "transaction_count",
+            "ranges": [
+              {
+                "key": "All"
+              },
+              {
+                "from": 1,
+                "key": "Up to 50",
+                "to": 51
+              },
+              {
+                "from": 51,
+                "key": "51 to 400",
+                "to": 401
+              },
+              {
+                "from": 401,
+                "key": "401 to 1000",
+                "to": 1001
+              },
+              {
+                "from": 1001,
+                "key": "More than 1000"
+              }
+            ]
           }
         }
       }
