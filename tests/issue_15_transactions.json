@@ -1,24 +1,11 @@
 {
   "aggs": {
-    "Tag": {
-      "aggs": {
-        "key_value_pairs.key_value_hash.Tag.keyword": {
-          "terms": {
-            "field": "key_value_pairs.key_value_hash.Tag.keyword",
-            "size": 10
-          }
-        },
-        "key_value_pairs.key_value_hash.Tag.keyword_count": {
-          "cardinality": {
-            "field": "key_value_pairs.key_value_hash.Tag.keyword"
-          }
-        }
-      },
+    "Tag8": {
       "filter": {
         "match_all": {}
       }
     },
-    "doi": {
+    "doi4": {
       "aggs": {
         "has_doi": {
           "terms": {
@@ -36,7 +23,7 @@
         "match_all": {}
       }
     },
-    "groups": {
+    "groups7": {
       "aggs": {
         "groups.keyword": {
           "terms": {
@@ -72,7 +59,30 @@
         "match_all": {}
       }
     },
-    "omics.dms.experiment_name": {
+    "instruments6": {
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "omics.dms.dataset_name10": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "omics.dms.experiment_name9": {
       "aggs": {
         "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword": {
           "terms": {
@@ -83,6 +93,24 @@
         "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword_count": {
           "cardinality": {
             "field": "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "proxymod.version12": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.proxymod.version.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.proxymod.version.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.proxymod.version.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.proxymod.version.keyword"
           }
         }
       },
@@ -107,6 +135,42 @@
       "filter": {
         "match_all": {}
       }
+    },
+    "release_data3": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.Tag.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.Tag.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.Tag.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.Tag.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "user_of_record11": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.user_of_record.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.user_of_record.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.user_of_record.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.user_of_record.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
     }
   },
   "query": {
@@ -115,11 +179,6 @@
         {
           "term": {
             "type": "transactions"
-          }
-        },
-        {
-          "term": {
-            "_index": "pacifica_search_dmlb2000"
           }
         },
         {

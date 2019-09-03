@@ -10,15 +10,24 @@ import json
 import jsonschema
 import requests
 from celery.bin.celery import main as celery_main
-from pacifica.elasticsearch.__main__ import main, object_options, cmp_date_options
 
 
 class TestElasticsearch(TestCase):
     """Test the example class."""
 
+    env_hash = {
+        'BROKER_URL': 'redis://127.0.0.1:6379/0',
+        'BACKEND_URL': 'redis://127.0.0.1:6379/0',
+        'NOTIFICATIONS_DISABLED': 'True',
+        'ADMIN_USER_ID': '10',
+        'CACHE_SIZE': '0'
+    }
+
     @classmethod
     def setUpClass(cls):
         """Setup the celery worker process."""
+        for key, value in cls.env_hash.items():
+            os.environ[key] = value
         cls.celery_thread = subprocess.Popen([
             sys.executable, '-m',
             'celery', '-A', 'pacifica.elasticsearch.tasks', 'worker', '--pool', 'solo',
@@ -45,9 +54,12 @@ class TestElasticsearch(TestCase):
             ])
         except SystemExit:
             pass
+        for key, _value in cls.env_hash.items():
+            del os.environ[key]
 
     def test_main_errors(self):
         """Test some of the command line failure conditions."""
+        from pacifica.elasticsearch.__main__ import object_options, cmp_date_options
         with self.assertRaises(ValueError, msg='blarg is not a valid object to sync'):
             object_options('blarg')
         with self.assertRaises(ValueError, msg='blarg is not a valid date to compare objects to'):
@@ -57,6 +69,7 @@ class TestElasticsearch(TestCase):
 
     def test_main(self):
         """Test the add method in example class."""
+        from pacifica.elasticsearch.__main__ import main
         main('--objects-per-page', '4', '--threads', '1',
              '--exclude', 'keys.key=temp_f', '--time-ago', '3650 days after')
         sleep(3)
@@ -70,6 +83,7 @@ class TestElasticsearch(TestCase):
 
     def test_main_celery(self):
         """Test the add method in example class."""
+        from pacifica.elasticsearch.__main__ import main
         main('--objects-per-page', '4', '--celery',
              '--exclude', 'keys.key=temp_f', '--time-ago', '3650 days after')
         sleep(3)
@@ -83,6 +97,7 @@ class TestElasticsearch(TestCase):
 
     def test_main_celery_single_obj(self):
         """Test the add method in example class."""
+        from pacifica.elasticsearch.__main__ import main
         main('--objects-per-page', '4', '--celery', '--object=projects',
              '--exclude', 'keys.key=temp_f', '--time-ago', '3650 days after')
         sleep(3)
@@ -112,6 +127,7 @@ class TestElasticsearch(TestCase):
 
     def test_keyword_query(self):
         """Test the keyword query for users."""
+        self.test_main()
         for query_example in ['issue_9.json', 'issue_15_projects.json', 'issue_15_transactions.json']:
             post_data = json.loads(open(os.path.join(os.path.dirname(__file__), query_example)).read())
             resp = requests.post('http://localhost:9200/_search', json=post_data)
