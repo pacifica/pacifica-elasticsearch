@@ -23,7 +23,7 @@ class TransactionsRender(SearchBase):
         'updated_date', 'created_date', 'description'
     ]
     rel_objs = [
-        'users', 'instruments', 'projects', 'key_value_pairs', 'files'
+        'users', 'instruments', 'groups', 'projects', 'key_value_pairs', 'files'
     ]
 
     @staticmethod
