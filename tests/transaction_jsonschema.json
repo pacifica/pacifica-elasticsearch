@@ -59,6 +59,66 @@
           },
           "type": "array"
         },
+        "groups": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "created_date": {
+                "type": "string"
+              },
+              "display_name": {
+                "const": "NMR Instrum\u00e9nts"
+              },
+              "instruments": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "created_date": {
+                      "type": "string"
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "keyword": {
+                      "type": "string"
+                    },
+                    "obj_id": {
+                      "type": "string"
+                    },
+                    "release": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "updated_date": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "keyword": {
+                "const": "nmr_instrum\u00e9nts"
+              },
+              "obj_id": {
+                "const": "groups_1001"
+              },
+              "release": {
+                "const": "true"
+              },
+              "type": {
+                "const": "groups"
+              },
+              "updated_date": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
         "has_doi": {
           "const": "true"
         },
