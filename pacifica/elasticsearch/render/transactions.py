@@ -7,6 +7,7 @@ from pacifica.metadata.orm import DOITransaction, TransactionUser
 from ..config import get_config
 from .users import UsersRender
 from .instruments import InstrumentsRender
+from .groups import GroupsRender
 from .projects import ProjectsRender
 from .keys import KeysRender
 from .values import ValuesRender
@@ -125,6 +126,19 @@ class TransactionsRender(SearchBase):
             InstrumentsRender.render(
                 cls.get_rel_by_args('instruments', _id=inst_id)[0]
             ) for inst_id in ret
+        ]
+
+    @classmethod
+    def groups_obj_lists(cls, **trans_obj):
+        """Get the instrument groups related to the transaction."""
+        ret = set()
+        for inst_obj in cls.get_rel_by_args('transsip', _id=trans_obj['_id']):
+            for group_obj in cls.get_rel_by_args('instrument_group', instrument=inst_obj['instrument']):
+                ret.update([group_obj['group']])
+        return [
+            GroupsRender.render(
+                cls.get_rel_by_args('groups', _id=group_id)[0]
+            ) for group_id in ret
         ]
 
     @classmethod
