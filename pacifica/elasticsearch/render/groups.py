@@ -3,6 +3,7 @@
 """Search transaction rendering methods."""
 from six import text_type
 from .base import SearchBase
+from .instruments import InstrumentsRender
 
 
 class GroupsRender(SearchBase):
@@ -11,6 +12,10 @@ class GroupsRender(SearchBase):
     fields = [
         'obj_id', 'display_name', 'keyword', 'release',
         'updated_date', 'created_date'
+    ]
+
+    rel_objs = [
+        'instruments'
     ]
 
     @staticmethod
@@ -47,3 +52,12 @@ class GroupsRender(SearchBase):
     def get_transactions(cls, **_group_obj):
         """Just return an empty list."""
         return []
+
+    @classmethod
+    def instruments_obj_lists(cls, **group_obj):
+        """Get the instruments related to the group."""
+        return [
+            InstrumentsRender.render(
+                cls.get_rel_by_args('instruments', _id=inst_group_obj['instrument'])[0]
+            ) for inst_group_obj in cls.get_rel_by_args('instrument_group', group=group_obj['_id'])
+        ]

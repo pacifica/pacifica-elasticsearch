@@ -10,20 +10,15 @@ stages:
 - lint
 - test
 
+env:
+  PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
+
 script:
 - coverage run --include='pacifica/elasticsearch/*' -p -m celery -A pacifica.elasticsearch.tasks worker -l info &
 - coverage run --include='pacifica/elasticsearch/*' -m pytest -xsv
 - celery -A pacifica.elasticsearch.tasks control shutdown || true
 - coverage combine -a .coverage*
 - coverage report -m --fail-under 100
-
-env:
-  BROKER_URL: redis://127.0.0.1:6379/0
-  BACKEND_URL: redis://127.0.0.1:6379/0
-  NOTIFICATIONS_DISABLED: True
-  PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
-  ADMIN_USER_ID: 10
-  CACHE_SIZE: 0
 
 before_script:
 - pip install ansible

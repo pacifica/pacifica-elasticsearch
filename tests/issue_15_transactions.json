@@ -1,0 +1,193 @@
+{
+  "aggs": {
+    "Tag8": {
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "doi4": {
+      "aggs": {
+        "has_doi": {
+          "terms": {
+            "field": "has_doi",
+            "size": 50
+          }
+        },
+        "has_doi_count": {
+          "cardinality": {
+            "field": "has_doi"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "groups7": {
+      "aggs": {
+        "groups.keyword": {
+          "terms": {
+            "field": "groups.keyword",
+            "size": 10
+          }
+        },
+        "groups.keyword_count": {
+          "cardinality": {
+            "field": "groups.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "instruments": {
+      "aggs": {
+        "instruments.keyword": {
+          "terms": {
+            "field": "instruments.keyword",
+            "size": 10
+          }
+        },
+        "instruments.keyword_count": {
+          "cardinality": {
+            "field": "instruments.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "instruments6": {
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "omics.dms.dataset_name10": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.dataset_name.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "omics.dms.experiment_name9": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.omics.dms.experiment_name.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "proxymod.version12": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.proxymod.version.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.proxymod.version.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.proxymod.version.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.proxymod.version.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "release_data": {
+      "aggs": {
+        "release": {
+          "terms": {
+            "field": "release",
+            "size": 50
+          }
+        },
+        "release_count": {
+          "cardinality": {
+            "field": "release"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "release_data3": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.Tag.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.Tag.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.Tag.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.Tag.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "user_of_record11": {
+      "aggs": {
+        "key_value_pairs.key_value_hash.user_of_record.keyword": {
+          "terms": {
+            "field": "key_value_pairs.key_value_hash.user_of_record.keyword",
+            "size": 10
+          }
+        },
+        "key_value_pairs.key_value_hash.user_of_record.keyword_count": {
+          "cardinality": {
+            "field": "key_value_pairs.key_value_hash.user_of_record.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    }
+  },
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "type": "transactions"
+          }
+        },
+        {
+          "term": {
+            "projects.obj_id": "projects_50635"
+          }
+        }
+      ]
+    }
+  },
+  "size": 15
+}
