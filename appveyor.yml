@@ -18,7 +18,6 @@ environment:
   BROKER_URL: redis://127.0.0.1:6379/0
   BACKEND_URL: redis://127.0.0.1:6379/0
   matrix:
-    - PYTHON: C:\Python27-x64
     - PYTHON: C:\Python36-x64
 
 before_test:
@@ -65,9 +64,10 @@ test_script:
   - ps: >
       mkdir C:\tmp; C:\pacifica\Scripts\activate.ps1;
       pre-commit run -a;
-      $back_proc = Start-Process C:\pacifica\Scripts\coverage.exe -ArgumentList "run --include='pacifica/elasticsearch/*' -p -m celery -A pacifica.elasticsearch.tasks worker -l info -P solo -c 1" -PassThru -RedirectStandardError celery-error.log -RedirectStandardOutput celery-output.log;
+      pip install .; cd tests
+      $back_proc = Start-Process C:\pacifica\Scripts\coverage.exe -ArgumentList "run --include='*pacifica/elasticsearch/*' -p -m celery -A pacifica.elasticsearch.tasks worker -l info -P solo -c 1" -PassThru -RedirectStandardError celery-error.log -RedirectStandardOutput celery-output.log;
       sleep 1;
-      coverage run --include='pacifica/elasticsearch/*' -m pytest -xsv;
+      coverage run --include='*pacifica/elasticsearch/*' -m pytest -xsv;
       celery -A pacifica.elasticsearch.tasks control shutdown;
       ls .coverage* | %{ coverage combine -a $_.name };
       coverage report -m --fail-under=100;
