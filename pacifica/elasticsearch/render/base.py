@@ -37,6 +37,19 @@ class SearchBase:
     search_required_uuid = str(Relationships.get(Relationships.name == 'search_required').uuid)
 
     @classmethod
+    def get_select_query(cls, time_delta, obj_cls, **kwargs):
+        """Return the select query based on kwargs provided."""
+        time_field = kwargs.get('time_field', 'updated')
+        page = kwargs.get('page', 0)
+        items_per_page = kwargs.get('items_per_page', '20')
+        # pylint: disable=protected-access
+        return (obj_cls.select()
+                .where(getattr(obj_cls, time_field) > time_delta)
+                .order_by(obj_cls._meta.primary_key)
+                .paginate(page, items_per_page))
+        # pylint: enable=protected-access
+
+    @classmethod
     @search_lru_cache
     def get_rel_by_args(cls, mdobject, **kwargs):
         """Get the transaction user relationship."""
