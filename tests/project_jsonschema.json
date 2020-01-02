@@ -142,6 +142,9 @@
         "transaction_count": {
           "const": 2
         },
+        "released_count": {
+          "const": 2
+        },
         "transaction_ids": {
           "items": {
             "type": "string"
