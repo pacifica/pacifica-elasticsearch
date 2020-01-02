@@ -2,14 +2,8 @@
 # -*- coding: utf-8 -*-
 """Configuration reading and validation module."""
 from os import getenv
-try:
-    from ConfigParser import SafeConfigParser
-except ImportError:  # pragma: no cover python 2 vs 3 issue
-    from configparser import ConfigParser as SafeConfigParser
-try:
-    from functools import lru_cache
-except ImportError:  # pragma: no cover python 2 vs 3 issue
-    from backports.functools_lru_cache import lru_cache
+from configparser import ConfigParser as SafeConfigParser
+from functools import lru_cache
 from .globals import CONFIG_FILE
 
 

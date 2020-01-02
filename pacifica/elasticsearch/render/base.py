@@ -1,11 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Search base class has some common data and logic."""
-try:
-    from functools import lru_cache
-except ImportError:  # pragma: no cover only python 2
-    from backports.functools_lru_cache import lru_cache
-from functools import wraps
+from functools import lru_cache, wraps
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from pacifica.metadata.orm import Relationships
 from ..config import get_config
