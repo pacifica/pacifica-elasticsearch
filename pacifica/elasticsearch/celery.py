@@ -18,7 +18,7 @@ SYNC_OBJECTS = [
 ]
 
 
-class CeleryQueue(object):
+class CeleryQueue:
     """Class to implement the queue interface."""
 
     def __init__(self):
@@ -28,7 +28,7 @@ class CeleryQueue(object):
 
     def put(self, job_dict):
         """Save job dictionary and run job."""
-        # pylint: disable=cyclic-import
+        # pylint: disable=cyclic-import,import-outside-toplevel
         from .tasks import work_on_job
         # pylint: enable=cyclic-import
         result = work_on_job.delay(job_dict)
