@@ -57,6 +57,15 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "created_date",
+                    "display_name",
+                    "keyword",
+                    "obj_id",
+                    "release",
+                    "type",
+                    "updated_date"
+                  ],
                   "type": "object"
                 },
                 "type": "array"
@@ -77,6 +86,16 @@
                 "type": "string"
               }
             },
+            "required": [
+              "created_date",
+              "display_name",
+              "instruments",
+              "keyword",
+              "obj_id",
+              "release",
+              "type",
+              "updated_date"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -107,6 +126,15 @@
                 "type": "string"
               }
             },
+            "required": [
+              "created_date",
+              "display_name",
+              "keyword",
+              "obj_id",
+              "release",
+              "type",
+              "updated_date"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -144,6 +172,10 @@
                           "const": "19"
                         }
                       },
+                      "required": [
+                        "key",
+                        "value"
+                      ],
                       "type": "object"
                     },
                     "type": "array"
@@ -170,6 +202,16 @@
                 "type": "string"
               }
             },
+            "required": [
+              "created_date",
+              "display_name",
+              "keyword",
+              "long_name",
+              "obj_id",
+              "release",
+              "type",
+              "updated_date"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -212,6 +254,15 @@
                 "type": "string"
               }
             },
+            "required": [
+              "created_date",
+              "display_name",
+              "keyword",
+              "obj_id",
+              "release",
+              "type",
+              "updated_date"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -263,6 +314,15 @@
                     "type": "string"
                   }
                 },
+                "required": [
+                  "created_date",
+                  "display_name",
+                  "keyword",
+                  "obj_id",
+                  "release",
+                  "type",
+                  "updated_date"
+                ],
                 "type": "object"
               },
               "type": "array"
@@ -271,6 +331,28 @@
           "type": "object"
         }
       },
+      "required": [
+        "abstract",
+        "actual_end_date",
+        "actual_start_date",
+        "closed_date",
+        "created_date",
+        "display_name",
+        "groups",
+        "institutions",
+        "instruments",
+        "keyword",
+        "obj_id",
+        "release",
+        "released_count",
+        "science_themes",
+        "title",
+        "transaction_count",
+        "transaction_ids",
+        "type",
+        "updated_date",
+        "users"
+      ],
       "type": "object"
     }
   },
