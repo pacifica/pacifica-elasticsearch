@@ -8,7 +8,7 @@ from .config import get_config
 ELASTIC_INDEX = get_config().get('elasticsearch', 'index')
 
 
-class SearchRender(object):
+class SearchRender:
     """Search render class to contain methods."""
 
     @staticmethod

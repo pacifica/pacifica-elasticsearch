@@ -27,7 +27,7 @@ def search_lru_cache(func):
     return wrapper
 
 
-class SearchBase(object):
+class SearchBase:
     """Search base class containing common data and logic."""
 
     fields = []

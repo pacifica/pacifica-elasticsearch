@@ -59,6 +59,8 @@ class TestElasticsearch(TestCase):
 
     def test_main_errors(self):
         """Test some of the command line failure conditions."""
+        # The environment needs to be set before import
+        # pylint: disable=import-outside-toplevel
         from pacifica.elasticsearch.__main__ import object_options, cmp_date_options
         with self.assertRaises(ValueError, msg='blarg is not a valid object to sync'):
             object_options('blarg')
@@ -69,6 +71,8 @@ class TestElasticsearch(TestCase):
 
     def test_main(self):
         """Test the add method in example class."""
+        # The environment needs to be set before import
+        # pylint: disable=import-outside-toplevel
         from pacifica.elasticsearch.__main__ import main
         main('--objects-per-page', '4', '--threads', '1',
              '--exclude', 'keys.key=temp_f', '--time-ago', '3650 days after')
@@ -83,6 +87,8 @@ class TestElasticsearch(TestCase):
 
     def test_main_celery(self):
         """Test the add method in example class."""
+        # The environment needs to be set before import
+        # pylint: disable=import-outside-toplevel
         from pacifica.elasticsearch.__main__ import main
         main('--objects-per-page', '4', '--celery',
              '--exclude', 'keys.key=temp_f', '--time-ago', '3650 days after')
@@ -97,6 +103,8 @@ class TestElasticsearch(TestCase):
 
     def test_main_celery_single_obj(self):
         """Test the add method in example class."""
+        # The environment needs to be set before import
+        # pylint: disable=import-outside-toplevel
         from pacifica.elasticsearch.__main__ import main
         main('--objects-per-page', '4', '--celery', '--object=projects',
              '--exclude', 'keys.key=temp_f', '--time-ago', '3650 days after')
