@@ -1,6 +1,7 @@
 {
   "properties": {
     "_source": {
+      "additionalProperties": false,
       "properties": {
         "access_url": {
           "const": "https://dx.doi.org/10.25584/data.2018-03.127/123456"
@@ -8,11 +9,122 @@
         "created_date": {
           "const": "2017-07-15T00:00:00"
         },
+        "description": {
+          "const": "data set for doing awsome science"
+        },
+        "files": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "created_date": {
+                "type": "string"
+              },
+              "ctime": {
+                "type": "string"
+              },
+              "display_name": {
+                "type": "string"
+              },
+              "hashsum": {
+                "type": "string"
+              },
+              "hashtype": {
+                "type": "string"
+              },
+              "keyword": {
+                "type": "string"
+              },
+              "mtime": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "obj_id": {
+                "type": "string"
+              },
+              "size": {
+                "type": "string"
+              },
+              "subdir": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "updated_date": {
+                "type": "string"
+              }
+            }
+          },
+          "type": "array"
+        },
+        "groups": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "created_date": {
+                "type": "string"
+              },
+              "display_name": {
+                "const": "NMR Instrum\u00e9nts"
+              },
+              "instruments": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "created_date": {
+                      "type": "string"
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "keyword": {
+                      "type": "string"
+                    },
+                    "obj_id": {
+                      "type": "string"
+                    },
+                    "release": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "updated_date": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "keyword": {
+                "const": "nmr_instrum\u00e9nts"
+              },
+              "obj_id": {
+                "const": "groups_1001"
+              },
+              "release": {
+                "const": "true"
+              },
+              "type": {
+                "const": "groups"
+              },
+              "updated_date": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
         "has_doi": {
           "const": "true"
         },
         "instrument_groups": {
           "items": {
+            "additionalProperties": false,
             "properties": {
               "display_name": {
                 "const": "nmr_instrum\u00e9nts"
@@ -33,13 +145,48 @@
         },
         "instruments": {
           "items": {
+            "additionalProperties": false,
             "properties": {
+              "created_date": {
+                "type": "string"
+              },
               "display_name": {
                 "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
               },
               "key_value_pairs": {
+                "additionalProperties": false,
                 "properties": {
+                  "key_objs": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "created_date": {
+                          "type": "string"
+                        },
+                        "display_name": {
+                          "type": "string"
+                        },
+                        "keyword": {
+                          "type": "string"
+                        },
+                        "obj_id": {
+                          "type": "string"
+                        },
+                        "released": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "updated_date": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "type": "array"
+                  },
                   "key_value_hash": {
+                    "additionalProperties": false,
                     "properties": {
                       "temp_f": {
                         "const": "19"
@@ -49,6 +196,7 @@
                   },
                   "key_value_objs": {
                     "items": {
+                      "additionalProperties": false,
                       "properties": {
                         "key": {
                           "const": "temp_f"
@@ -58,6 +206,35 @@
                         }
                       },
                       "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "value_objs": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "created_date": {
+                          "type": "string"
+                        },
+                        "display_name": {
+                          "type": "string"
+                        },
+                        "keyword": {
+                          "type": "string"
+                        },
+                        "obj_id": {
+                          "type": "string"
+                        },
+                        "released": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "updated_date": {
+                          "type": "string"
+                        }
+                      }
                     },
                     "type": "array"
                   }
@@ -73,8 +250,14 @@
               "obj_id": {
                 "const": "instruments_54"
               },
+              "release": {
+                "type": "string"
+              },
               "type": {
                 "const": "instruments"
+              },
+              "updated_date": {
+                "type": "string"
               }
             },
             "type": "object"
@@ -82,8 +265,42 @@
           "type": "array"
         },
         "key_value_pairs": {
+          "additionalProperties": false,
           "properties": {
+            "key_objs": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_date": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": "string"
+                  },
+                  "keyword": {
+                    "type": "string"
+                  },
+                  "obj_id": {
+                    "type": "string"
+                  },
+                  "release": {
+                    "type": "string"
+                  },
+                  "released": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "updated_date": {
+                    "type": "string"
+                  }
+                }
+              },
+              "type": "array"
+            },
             "key_value_hash": {
+              "additionalProperties": false,
               "properties": {
                 "temp_f": {
                   "const": "27"
@@ -93,6 +310,7 @@
             },
             "key_value_objs": {
               "items": {
+                "additionalProperties": false,
                 "properties": {
                   "key": {
                     "const": "temp_f"
@@ -104,6 +322,38 @@
                 "type": "object"
               },
               "type": "array"
+            },
+            "value_objs": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_date": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": "string"
+                  },
+                  "keyword": {
+                    "type": "string"
+                  },
+                  "obj_id": {
+                    "type": "string"
+                  },
+                  "release": {
+                    "type": "string"
+                  },
+                  "released": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "updated_date": {
+                    "type": "string"
+                  }
+                }
+              },
+              "type": "array"
             }
           },
           "type": "object"
@@ -113,9 +363,25 @@
         },
         "projects": {
           "items": {
+            "additionalProperties": false,
             "properties": {
               "abstract": {
                 "const": "This is a currently active project with a set end date but no clos\u00e9d date"
+              },
+              "actual_end_date": {
+                "type": "string"
+              },
+              "actual_start_date": {
+                "type": "string"
+              },
+              "closed_date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_date": {
+                "type": "string"
               },
               "display_name": {
                 "const": "Pacifica D\u00e9velopment (active no close)"
@@ -129,11 +395,17 @@
               "obj_id": {
                 "const": "projects_1234a"
               },
+              "release": {
+                "type": "string"
+              },
               "title": {
                 "const": "Pacifica D\u00e9velopment (active no close)"
               },
               "type": {
                 "const": "projects"
+              },
+              "updated_date": {
+                "type": "string"
               }
             },
             "type": "object"
@@ -146,11 +418,48 @@
         "type": {
           "const": "transactions"
         },
+        "updated_date": {
+          "type": "string"
+        },
         "users": {
+          "additionalProperties": false,
           "properties": {
+            "authorized_releaser": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_date": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "const": "Johnson, bob "
+                  },
+                  "keyword": {
+                    "const": "Johnson, bob "
+                  },
+                  "obj_id": {
+                    "const": "users_11"
+                  },
+                  "release": {
+                    "const": "false"
+                  },
+                  "type": {
+                    "const": "users"
+                  },
+                  "updated_date": {
+                    "type": "string"
+                  }
+                }
+              },
+              "type": "array"
+            },
             "submitter": {
               "items": {
+                "additionalProperties": false,
                 "properties": {
+                  "created_date": {
+                    "type": "string"
+                  },
                   "display_name": {
                     "const": "Brown\u00e9 Jr, David\u00e9 "
                   },
@@ -160,11 +469,46 @@
                   "obj_id": {
                     "const": "users_10"
                   },
+                  "release": {
+                    "type": "string"
+                  },
                   "type": {
                     "const": "users"
+                  },
+                  "updated_date": {
+                    "type": "string"
                   }
                 },
                 "type": "object"
+              },
+              "type": "array"
+            },
+            "t\u00e9st_rel_2": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_date": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "const": "Johnson, bob "
+                  },
+                  "keyword": {
+                    "const": "Johnson, bob "
+                  },
+                  "obj_id": {
+                    "const": "users_11"
+                  },
+                  "release": {
+                    "const": "false"
+                  },
+                  "type": {
+                    "const": "users"
+                  },
+                  "updated_date": {
+                    "type": "string"
+                  }
+                }
               },
               "type": "array"
             }

@@ -6,16 +6,10 @@ import os
 from json import dumps, loads
 from time import sleep
 from threading import Thread
-try:
-    from Queue import Queue
-except ImportError:  # pragma: no cover
-    from queue import Queue
+from queue import Queue
 from math import ceil
 from datetime import datetime
-try:
-    from itertools import zip_longest
-except ImportError:  # pragma: no cover python 2
-    from itertools import izip_longest as zip_longest
+from itertools import zip_longest
 from elasticsearch import Elasticsearch, ElasticsearchException, helpers
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from .config import get_config
@@ -93,17 +87,9 @@ def try_doing_work(cli, job):
 def yield_data(**kwargs):
     """yield objects from obj for bulk ingest."""
     obj = kwargs['object']
-    time_field = kwargs['time_field']
-    page = kwargs['page']
-    items_per_page = kwargs['items_per_page']
-    time_delta = kwargs['time_delta']
     obj_cls = ObjectInfoAPI.get_class_object_from_name(obj)
-    # pylint: disable=protected-access
-    query = (obj_cls.select()
-             .where(getattr(obj_cls, time_field) > time_delta)
-             .order_by(obj_cls._meta.primary_key)
-             .paginate(page, items_per_page))
-    # pylint: enable=protected-access
+    render_cls = SearchRender.get_render_class(obj)
+    query = render_cls.get_select_query(obj_cls=obj_cls, **kwargs)
     return SearchRender.generate(obj, [qobj.to_hash() for qobj in query], kwargs['exclude'])
 
 

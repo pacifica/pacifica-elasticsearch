@@ -2,5 +2,6 @@ backports.functools_lru_cache
 celery
 elasticsearch
 pacifica-metadata>=0.11.0,<1
+pacifica-namespace
 python-dateutil
 tqdm

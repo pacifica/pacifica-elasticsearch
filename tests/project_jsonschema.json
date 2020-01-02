@@ -1,6 +1,7 @@
 {
   "properties": {
     "_source": {
+      "additionalProperties": false,
       "properties": {
         "abstract": {
           "const": "This is a currently active project with a set end date but no clos\u00e9d date"
@@ -14,12 +15,79 @@
         "closed_date": {
           "const": null
         },
+        "created_date": {
+          "type": "string"
+        },
         "display_name": {
           "const": "Pacifica D\u00e9velopment (active no close)"
         },
+        "groups": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "created_date": {
+                "type": "string"
+              },
+              "display_name": {
+                "const": "NMR Instrum\u00e9nts"
+              },
+              "instruments": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "created_date": {
+                      "type": "string"
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "keyword": {
+                      "type": "string"
+                    },
+                    "obj_id": {
+                      "type": "string"
+                    },
+                    "release": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "updated_date": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "keyword": {
+                "const": "nmr_instrum\u00e9nts"
+              },
+              "obj_id": {
+                "const": "groups_1001"
+              },
+              "release": {
+                "const": "true"
+              },
+              "type": {
+                "const": "groups"
+              },
+              "updated_date": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
         "institutions": {
           "items": {
+            "additionalProperties": false,
             "properties": {
+              "created_date": {
+                "type": "string"
+              },
               "display_name": {
                 "const": "University of Washington\u00e9"
               },
@@ -29,28 +97,14 @@
               "obj_id": {
                 "const": "institutions_47"
               },
+              "release": {
+                "type": "string"
+              },
               "type": {
                 "const": "institutions"
-              }
-            },
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "instrument_groups": {
-          "items": {
-            "properties": {
-              "display_name": {
-                "const": "nmr_instrum\u00e9nts"
               },
-              "keyword": {
-                "const": "nmr_instrum\u00e9nts"
-              },
-              "obj_id": {
-                "const": "groups_1001"
-              },
-              "type": {
-                "const": "groups"
+              "updated_date": {
+                "type": "string"
               }
             },
             "type": "object"
@@ -59,13 +113,19 @@
         },
         "instruments": {
           "items": {
+            "additionalProperties": false,
             "properties": {
+              "created_date": {
+                "type": "string"
+              },
               "display_name": {
                 "const": "NMR PROBES: Nittany Liquid Prob\u00e9s"
               },
               "key_value_pairs": {
+                "additionalProperties": false,
                 "properties": {
                   "key_value_hash": {
+                    "additionalProperties": false,
                     "properties": {
                       "temp_f": {
                         "const": "19"
@@ -75,6 +135,7 @@
                   },
                   "key_value_objs": {
                     "items": {
+                      "additionalProperties": false,
                       "properties": {
                         "key": {
                           "const": "temp_f"
@@ -99,8 +160,14 @@
               "obj_id": {
                 "const": "instruments_54"
               },
+              "release": {
+                "type": "string"
+              },
               "type": {
                 "const": "instruments"
+              },
+              "updated_date": {
+                "type": "string"
               }
             },
             "type": "object"
@@ -116,9 +183,16 @@
         "release": {
           "const": "true"
         },
+        "released_count": {
+          "const": 2
+        },
         "science_themes": {
           "items": {
+            "additionalProperties": false,
             "properties": {
+              "created_date": {
+                "type": "string"
+              },
               "display_name": {
                 "const": "g\u00e9neral"
               },
@@ -128,8 +202,14 @@
               "obj_id": {
                 "const": "science_themes_g\u00e9neral"
               },
+              "release": {
+                "type": "string"
+              },
               "type": {
                 "const": "science_themes"
+              },
+              "updated_date": {
+                "type": "string"
               }
             },
             "type": "object"
@@ -142,9 +222,6 @@
         "transaction_count": {
           "const": 2
         },
-        "released_count": {
-          "const": 2
-        },
         "transaction_ids": {
           "items": {
             "type": "string"
@@ -154,11 +231,19 @@
         "type": {
           "const": "projects"
         },
+        "updated_date": {
+          "type": "string"
+        },
         "users": {
+          "additionalProperties": false,
           "properties": {
             "t\u00e9st_rel_1": {
               "items": {
+                "additionalProperties": false,
                 "properties": {
+                  "created_date": {
+                    "type": "string"
+                  },
                   "display_name": {
                     "const": "Brown\u00e9 Jr, David\u00e9 "
                   },
@@ -173,6 +258,9 @@
                   },
                   "type": {
                     "const": "users"
+                  },
+                  "updated_date": {
+                    "type": "string"
                   }
                 },
                 "type": "object"

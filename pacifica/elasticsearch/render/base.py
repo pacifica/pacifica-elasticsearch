@@ -1,11 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Search base class has some common data and logic."""
-try:
-    from functools import lru_cache
-except ImportError:  # pragma: no cover only python 2
-    from backports.functools_lru_cache import lru_cache
-from functools import wraps
+from functools import lru_cache, wraps
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from pacifica.metadata.orm import Relationships
 from ..config import get_config
@@ -27,7 +23,7 @@ def search_lru_cache(func):
     return wrapper
 
 
-class SearchBase(object):
+class SearchBase:
     """Search base class containing common data and logic."""
 
     fields = []
@@ -35,6 +31,19 @@ class SearchBase(object):
     obj_type = 'unimplemented'
     releaser_uuid = str(Relationships.get(Relationships.name == 'authorized_releaser').uuid)
     search_required_uuid = str(Relationships.get(Relationships.name == 'search_required').uuid)
+
+    @classmethod
+    def get_select_query(cls, time_delta, obj_cls, **kwargs):
+        """Return the select query based on kwargs provided."""
+        time_field = kwargs.get('time_field', 'updated')
+        page = kwargs.get('page', 0)
+        items_per_page = kwargs.get('items_per_page', '20')
+        # pylint: disable=protected-access
+        return (obj_cls.select()
+                .where(getattr(obj_cls, time_field) > time_delta)
+                .order_by(obj_cls._meta.primary_key)
+                .paginate(page, items_per_page))
+        # pylint: enable=protected-access
 
     @classmethod
     @search_lru_cache

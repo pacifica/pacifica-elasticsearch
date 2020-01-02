@@ -4,6 +4,10 @@
 from six import text_type
 from .base import SearchBase
 from .users import UsersRender
+from .institutions import InstitutionsRender
+from .instruments import InstrumentsRender
+from .groups import GroupsRender
+from .science_themes import ScienceThemesRender
 
 
 class ProjectsRender(SearchBase):
@@ -16,7 +20,7 @@ class ProjectsRender(SearchBase):
     ]
 
     rel_objs = [
-        'users'
+        'users', 'institutions', 'instruments', 'groups', 'science_themes'
     ]
 
     @staticmethod
@@ -89,6 +93,48 @@ class ProjectsRender(SearchBase):
         return [
             'transactions_{}'.format(trans_id)
             for trans_id in cls._transsip_transsap_merge({'project': proj_obj['_id']}, '_id')
+        ]
+
+    @classmethod
+    def institutions_obj_lists(cls, **proj_obj):
+        """Get the institutions related to the transaction."""
+        ret = set()
+        for proj_user_obj in cls.get_rel_by_args('project_user', project=proj_obj['_id']):
+            for inst_obj in cls.get_rel_by_args('institution_user', user=proj_user_obj['user']):
+                ret.update([inst_obj['institution']])
+        return [
+            InstitutionsRender.render(
+                cls.get_rel_by_args('institutions', _id=inst_id)[0]
+            ) for inst_id in ret
+        ]
+
+    @classmethod
+    def instruments_obj_lists(cls, **proj_obj):
+        """Get the instruments related to the transaction."""
+        return [
+            InstrumentsRender.render(
+                cls.get_rel_by_args('instruments', _id=proj_inst_obj['instrument'])[0]
+            ) for proj_inst_obj in cls.get_rel_by_args('project_instrument', project=proj_obj['_id'])
+        ]
+
+    @classmethod
+    def groups_obj_lists(cls, **proj_obj):
+        """Get the instrument groups related to the project."""
+        ret = set()
+        for proj_inst_obj in cls.get_rel_by_args('project_instrument', project=proj_obj['_id']):
+            for group_obj in cls.get_rel_by_args('instrument_group', instrument=proj_inst_obj['instrument']):
+                ret.update([group_obj['group']])
+        return [
+            GroupsRender.render(
+                cls.get_rel_by_args('groups', _id=group_id)[0], True
+            ) for group_id in ret
+        ]
+
+    @classmethod
+    def science_themes_obj_lists(cls, **proj_obj):
+        """Get science themes related to the transaction."""
+        return [
+            ScienceThemesRender.render(proj_obj)
         ]
 
     @classmethod
