@@ -34,6 +34,7 @@ class TransactionsRender(SearchBase):
         time_field = kwargs.get('time_field', 'updated')
         page = kwargs.get('page', 0)
         items_per_page = kwargs.get('items_per_page', 20)
+        enable_paging = kwargs.get('enable_paging', True)
         # The alias() method does return a class
         # pylint: disable=invalid-name
         ReleaseUsers = Users.alias()
@@ -43,7 +44,7 @@ class TransactionsRender(SearchBase):
         SAPProjects = Projects.alias()
         # pylint: enable=invalid-name
         # pylint: disable=protected-access
-        return (Transactions.select()
+        query = (Transactions.select()
                 .join(TransactionUser, JOIN.LEFT_OUTER, on=(TransactionUser.transaction == Transactions.id))
                 .join(DOITransaction, JOIN.LEFT_OUTER, on=(DOITransaction.transaction == TransactionUser.uuid))
                 .join(Relationships, JOIN.LEFT_OUTER, on=(Relationships.uuid == TransactionUser.relationship))
@@ -81,8 +82,11 @@ class TransactionsRender(SearchBase):
                     (getattr(Keys, time_field) > time_delta) |
                     (getattr(Values, time_field) > time_delta))
                 .order_by(obj_cls._meta.primary_key)
-                .paginate(page, items_per_page))
+                .distinct())
         # pylint: enable=protected-access
+        if enable_paging:
+            return (query.paginate(page, items_per_page))
+        return query
 
     @staticmethod
     def obj_id(**trans_obj):

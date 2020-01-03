@@ -37,13 +37,16 @@ class SearchBase:
         """Return the select query based on kwargs provided."""
         time_field = kwargs.get('time_field', 'updated')
         page = kwargs.get('page', 0)
+        enable_paging = kwargs.get('enable_paging', True)
         items_per_page = kwargs.get('items_per_page', '20')
         # pylint: disable=protected-access
-        return (obj_cls.select()
+        query = (obj_cls.select()
                 .where(getattr(obj_cls, time_field) > time_delta)
-                .order_by(obj_cls._meta.primary_key)
-                .paginate(page, items_per_page))
+                .order_by(obj_cls._meta.primary_key))
         # pylint: enable=protected-access
+        if enable_paging:
+            return (query.paginate(page, items_per_page))
+        return query
 
     @classmethod
     @search_lru_cache
