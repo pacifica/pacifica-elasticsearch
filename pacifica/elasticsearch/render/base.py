@@ -41,11 +41,11 @@ class SearchBase:
         items_per_page = kwargs.get('items_per_page', '20')
         # pylint: disable=protected-access
         query = (obj_cls.select()
-                .where(getattr(obj_cls, time_field) > time_delta)
-                .order_by(obj_cls._meta.primary_key))
+                 .where(getattr(obj_cls, time_field) > time_delta)
+                 .order_by(obj_cls._meta.primary_key))
         # pylint: enable=protected-access
         if enable_paging:
-            return (query.paginate(page, items_per_page))
+            return query.paginate(page, items_per_page)
         return query
 
     @classmethod

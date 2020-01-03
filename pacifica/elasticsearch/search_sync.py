@@ -114,7 +114,10 @@ def generate_work(args, work_queue):
         for time_field in args.compare_dates:
             obj_cls = ObjectInfoAPI.get_class_object_from_name(obj)
             render_cls = SearchRender.get_render_class(obj)
-            query = render_cls.get_select_query(obj_cls=obj_cls, time_delta=time_delta, enable_paging=False, **(vars(args)))
+            query = render_cls.get_select_query(
+                obj_cls=obj_cls, time_delta=time_delta,
+                enable_paging=False, **(vars(args))
+            )
             num_pages = int(ceil(float(query.count()) / args.items_per_page))
             for page in range(1, num_pages + 1):
                 obj_q.append({
