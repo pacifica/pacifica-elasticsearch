@@ -38,6 +38,7 @@ def es_client():
     esclient.indices.put_mapping(
         index=ELASTIC_INDEX,
         doc_type='doc',
+        include_type_name=True,
         body=dumps(mapping_params)
     )
     # pylint: enable=unexpected-keyword-arg
