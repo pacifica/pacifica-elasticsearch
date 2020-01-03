@@ -1,7 +1,5 @@
 language: python
-dist: xenial
-services:
-- elasticsearch
+dist: bionic
 python: 3.6
 
 stages:
@@ -14,25 +12,25 @@ env:
   BACKEND_URL: redis://127.0.0.1:6379/0
 
 script:
-- pip install .
-- cd tests
-- coverage run --include='*pacifica/elasticsearch/*' -p -m celery -A pacifica.elasticsearch.tasks worker -l info &
-- coverage run --include='*pacifica/elasticsearch/*' -m pytest -xsv
-- celery -A pacifica.elasticsearch.tasks control shutdown || true
-- coverage combine -a .coverage*
-- coverage report -m --fail-under 100
+  - pip install .
+  - cd tests
+  - coverage run --include='*pacifica/elasticsearch/*' -p -m celery -A pacifica.elasticsearch.tasks worker -l info &
+  - coverage run --include='*pacifica/elasticsearch/*' -m pytest -xsv
+  - celery -A pacifica.elasticsearch.tasks control shutdown || true
+  - coverage combine -a .coverage*
+  - coverage report -m --fail-under 100
 
 before_script:
-- pip install ansible
-- ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
-- ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=elasticsearch"
+  - pip install ansible
+  - ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
+  - ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=elasticsearch"
 
 jobs:
   include:
-  - stage: lint
-    before_script: skip
-    script: pre-commit run -a
-  - stage: test
+    - stage: lint
+      before_script: skip
+      script: pre-commit run -a
+    - stage: test
 
 install:
-- pip install -r requirements-dev.txt
+  - pip install -r requirements-dev.txt
