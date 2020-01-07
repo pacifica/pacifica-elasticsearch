@@ -9,19 +9,19 @@ class ScienceThemesRender(SearchBase):
     """Render an science theme for search."""
 
     fields = [
-        'obj_id', 'display_name', 'keyword', 'release',
-        'updated_date', 'created_date'
+        'obj_id', 'display_name', 'keyword',
+        'updated_date', 'created_date', 'release'
     ]
-
-    @staticmethod
-    def obj_id(**proj_obj):
-        """Return string for object id."""
-        return text_type('science_themes_{science_theme}').format(**proj_obj)
 
     @staticmethod
     def updated_date(**proj_obj):
         """Return string for the updated date."""
         return text_type('{updated}').format(**proj_obj)
+
+    @staticmethod
+    def obj_id(**proj_obj):
+        """Return string for object id."""
+        return text_type('science_themes_{science_theme}').format(**proj_obj)
 
     @staticmethod
     def created_date(**proj_obj):

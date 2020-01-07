@@ -13,6 +13,20 @@ _LRU_GLOBAL_ARGS = {
 }
 
 
+def query_select_default_args(class_method):
+    """Pull the default arguments out of kwargs."""
+    def wrapper(*args, **kwargs):
+        """Internal wrapper method."""
+        page = kwargs.pop('page', 0)
+        items_per_page = kwargs.pop('items_per_page', 20)
+        enable_paging = kwargs.pop('enable_paging', True)
+        query = class_method(*args, **kwargs)
+        if enable_paging:
+            return query.paginate(page, items_per_page)
+        return query
+    return wrapper
+
+
 def search_lru_cache(func):
     """Wrap a function with my lru cache args."""
     @lru_cache(**_LRU_GLOBAL_ARGS)
@@ -33,16 +47,13 @@ class SearchBase:
     search_required_uuid = str(Relationships.get(Relationships.name == 'search_required').uuid)
 
     @classmethod
-    def get_select_query(cls, time_delta, obj_cls, **kwargs):
+    @query_select_default_args
+    def get_select_query(cls, time_delta, obj_cls, time_field):
         """Return the select query based on kwargs provided."""
-        time_field = kwargs.get('time_field', 'updated')
-        page = kwargs.get('page', 0)
-        items_per_page = kwargs.get('items_per_page', '20')
         # pylint: disable=protected-access
         return (obj_cls.select()
                 .where(getattr(obj_cls, time_field) > time_delta)
-                .order_by(obj_cls._meta.primary_key)
-                .paginate(page, items_per_page))
+                .order_by(obj_cls._meta.primary_key))
         # pylint: enable=protected-access
 
     @classmethod

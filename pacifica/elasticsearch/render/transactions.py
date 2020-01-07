@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
-from peewee import DoesNotExist
-from pacifica.metadata.orm import DOITransaction, TransactionUser
+from peewee import DoesNotExist, JOIN
+from pacifica.metadata.orm import DOITransaction, TransactionUser, Transactions, Users, Instruments, TransSIP
+from pacifica.metadata.orm import TransSAP, Groups, InstrumentGroup, Relationships, Files, Projects, Keys, Values
+from pacifica.metadata.orm import TransactionKeyValue
 from ..config import get_config
 from .users import UsersRender
 from .instruments import InstrumentsRender
@@ -12,7 +14,7 @@ from .projects import ProjectsRender
 from .keys import KeysRender
 from .values import ValuesRender
 from .files import FilesRender
-from .base import SearchBase
+from .base import SearchBase, query_select_default_args
 
 
 class TransactionsRender(SearchBase):
@@ -25,6 +27,60 @@ class TransactionsRender(SearchBase):
     rel_objs = [
         'users', 'instruments', 'groups', 'projects', 'key_value_pairs', 'files'
     ]
+
+    @classmethod
+    @query_select_default_args
+    def get_select_query(cls, time_delta, obj_cls, time_field):
+        """Return the select query based on kwargs provided."""
+        # The alias() method does return a class
+        # pylint: disable=invalid-name
+        ReleaseUsers = Users.alias()
+        SIPUsers = Users.alias()
+        SAPUsers = Users.alias()
+        SIPProjects = Projects.alias()
+        SAPProjects = Projects.alias()
+        # pylint: enable=invalid-name
+        return (
+            Transactions.select()
+            .join(TransactionUser, JOIN.LEFT_OUTER, on=(TransactionUser.transaction == Transactions.id))
+            .join(DOITransaction, JOIN.LEFT_OUTER, on=(DOITransaction.transaction == TransactionUser.uuid))
+            .join(Relationships, JOIN.LEFT_OUTER, on=(Relationships.uuid == TransactionUser.relationship))
+            .join(ReleaseUsers, JOIN.LEFT_OUTER, on=(TransactionUser.user == ReleaseUsers.id))
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.id == Transactions.id))
+            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.id == Transactions.id))
+            .join(SIPUsers, JOIN.LEFT_OUTER, on=(TransSIP.submitter == SIPUsers.id))
+            .join(SAPUsers, JOIN.LEFT_OUTER, on=(TransSAP.submitter == SAPUsers.id))
+            .join(Instruments, JOIN.LEFT_OUTER, on=(Instruments.id == TransSIP.instrument))
+            .join(SIPProjects, JOIN.LEFT_OUTER, on=(SIPProjects.id == TransSIP.project))
+            .join(SAPProjects, JOIN.LEFT_OUTER, on=(SAPProjects.id == TransSAP.project))
+            .join(InstrumentGroup, JOIN.LEFT_OUTER, on=(InstrumentGroup.instrument == TransSIP.instrument))
+            .join(Groups, JOIN.LEFT_OUTER, on=(Groups.id == InstrumentGroup.group))
+            .join(Files, JOIN.LEFT_OUTER, on=(Files.transaction == Transactions.id))
+            .join(TransactionKeyValue, JOIN.LEFT_OUTER, on=(TransactionKeyValue.transaction == Transactions.id))
+            .join(Keys, JOIN.LEFT_OUTER, on=(TransactionKeyValue.key == Keys.id))
+            .join(Values, JOIN.LEFT_OUTER, on=(TransactionKeyValue.value == Values.id))
+            .where(
+                (getattr(Files, time_field) > time_delta) |
+                (getattr(DOITransaction, time_field) > time_delta) |
+                (getattr(Transactions, time_field) > time_delta) |
+                (getattr(TransactionUser, time_field) > time_delta) |
+                (getattr(Relationships, time_field) > time_delta) |
+                (getattr(ReleaseUsers, time_field) > time_delta) |
+                (getattr(SIPUsers, time_field) > time_delta) |
+                (getattr(SAPUsers, time_field) > time_delta) |
+                (getattr(SAPProjects, time_field) > time_delta) |
+                (getattr(SIPProjects, time_field) > time_delta) |
+                (getattr(TransSIP, time_field) > time_delta) |
+                (getattr(TransSAP, time_field) > time_delta) |
+                (getattr(Instruments, time_field) > time_delta) |
+                (getattr(InstrumentGroup, time_field) > time_delta) |
+                (getattr(Groups, time_field) > time_delta) |
+                (getattr(TransactionKeyValue, time_field) > time_delta) |
+                (getattr(Keys, time_field) > time_delta) |
+                (getattr(Values, time_field) > time_delta))
+            .order_by(Transactions.id)
+            .distinct()
+        )
 
     @staticmethod
     def obj_id(**trans_obj):
