@@ -13,6 +13,23 @@ _LRU_GLOBAL_ARGS = {
 }
 
 
+def query_select_default_args(class_method):
+    """Pull the default arguments out of kwargs."""
+    def wrapper(*args, **kwargs):
+        """Internal wrapper method."""
+        attr_defaults = {
+            'time_field': 'updated',
+            'page': 0,
+            'items_per_page': 20,
+            'enable_paging': True
+        }
+        for attr, default in attr_defaults.items():
+            if not kwargs.get(attr, False):
+                kwargs[attr] = default
+        return class_method(*args, **kwargs)
+    return wrapper
+
+
 def search_lru_cache(func):
     """Wrap a function with my lru cache args."""
     @lru_cache(**_LRU_GLOBAL_ARGS)
@@ -33,12 +50,10 @@ class SearchBase:
     search_required_uuid = str(Relationships.get(Relationships.name == 'search_required').uuid)
 
     @classmethod
-    def get_select_query(cls, time_delta, obj_cls, **kwargs):
+    @query_select_default_args
+    # pylint: disable=too-many-arguments
+    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
         """Return the select query based on kwargs provided."""
-        time_field = kwargs.get('time_field', 'updated')
-        page = kwargs.get('page', 0)
-        enable_paging = kwargs.get('enable_paging', True)
-        items_per_page = kwargs.get('items_per_page', '20')
         # pylint: disable=protected-access
         query = (obj_cls.select()
                  .where(getattr(obj_cls, time_field) > time_delta)

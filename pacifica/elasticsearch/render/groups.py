@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
-from .base import SearchBase
+from peewee import JOIN
+from pacifica.metadata.orm import Groups, Instruments, InstrumentGroup
+from .base import SearchBase, query_select_default_args
 from .instruments import InstrumentsRender
 
 
@@ -17,6 +19,28 @@ class GroupsRender(SearchBase):
     rel_objs = [
         'instruments'
     ]
+
+    @classmethod
+    @query_select_default_args
+    # pylint: disable=too-many-arguments
+    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+        """Generate the select query for groups related to instruments."""
+        # pylint: disable=protected-access
+        query = (
+            Groups.select()
+            .join(InstrumentGroup, JOIN.LEFT_OUTER, on=(InstrumentGroup.group == Groups.id))
+            .join(Instruments, JOIN.LEFT_OUTER, on=(Instruments.id == InstrumentGroup.instrument))
+            .where(
+                (getattr(Instruments, time_field) > time_delta) |
+                (getattr(InstrumentGroup, time_field) > time_delta) |
+                (getattr(Groups, time_field) > time_delta))
+            .order_by(Groups.id)
+            .distinct()
+        )
+        # pylint: enable=protected-access
+        if enable_paging:
+            return query.paginate(page, items_per_page)
+        return query
 
     @staticmethod
     def obj_id(**group_obj):

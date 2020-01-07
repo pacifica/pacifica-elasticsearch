@@ -14,7 +14,7 @@ from .projects import ProjectsRender
 from .keys import KeysRender
 from .values import ValuesRender
 from .files import FilesRender
-from .base import SearchBase
+from .base import SearchBase, query_select_default_args
 
 
 class TransactionsRender(SearchBase):
@@ -29,12 +29,10 @@ class TransactionsRender(SearchBase):
     ]
 
     @classmethod
-    def get_select_query(cls, time_delta, obj_cls, **kwargs):
+    @query_select_default_args
+    # pylint: disable=arguments-differ,too-many-arguments
+    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
         """Return the select query based on kwargs provided."""
-        time_field = kwargs.get('time_field', 'updated')
-        page = kwargs.get('page', 0)
-        items_per_page = kwargs.get('items_per_page', 20)
-        enable_paging = kwargs.get('enable_paging', True)
         # The alias() method does return a class
         # pylint: disable=invalid-name
         ReleaseUsers = Users.alias()
@@ -82,7 +80,7 @@ class TransactionsRender(SearchBase):
                 (getattr(TransactionKeyValue, time_field) > time_delta) |
                 (getattr(Keys, time_field) > time_delta) |
                 (getattr(Values, time_field) > time_delta))
-            .order_by(obj_cls._meta.primary_key)
+            .order_by(Transactions.id)
             .distinct()
         )
         # pylint: enable=protected-access

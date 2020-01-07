@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
-from .base import SearchBase
+from peewee import JOIN
+from pacifica.metadata.orm import Users, TransSIP, TransSAP
+from .base import SearchBase, query_select_default_args
 
 
 class UsersRender(SearchBase):
@@ -12,6 +14,28 @@ class UsersRender(SearchBase):
         'obj_id', 'display_name', 'keyword', 'release',
         'updated_date', 'created_date'
     ]
+
+    @classmethod
+    @query_select_default_args
+    # pylint: disable=arguments-differ,too-many-arguments
+    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+        """Return the select query based on kwargs provided."""
+        # pylint: disable=protected-access
+        query = (
+            Users.select()
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.submitter == Users.id))
+            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.submitter == Users.id))
+            .where(
+                (getattr(Users, time_field) > time_delta) |
+                (getattr(TransSIP, time_field) > time_delta) |
+                (getattr(TransSAP, time_field) > time_delta))
+            .order_by(Users.id)
+            .distinct()
+        )
+        # pylint: enable=protected-access
+        if enable_paging:
+            return query.paginate(page, items_per_page)
+        return query
 
     @staticmethod
     def obj_id(**user_obj):

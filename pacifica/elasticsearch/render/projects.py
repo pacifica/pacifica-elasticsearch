@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
-from .base import SearchBase
+from peewee import JOIN
+from pacifica.metadata.orm import Projects, Users, ProjectUser, Relationships, Institutions, InstitutionUser
+from pacifica.metadata.orm import Instruments, ProjectInstrument, Groups, InstrumentGroup, TransSIP, TransSAP
+from .base import SearchBase, query_select_default_args
 from .users import UsersRender
 from .institutions import InstitutionsRender
 from .instruments import InstrumentsRender
@@ -22,6 +25,45 @@ class ProjectsRender(SearchBase):
     rel_objs = [
         'users', 'institutions', 'instruments', 'groups', 'science_themes'
     ]
+
+    @classmethod
+    @query_select_default_args
+    # pylint: disable=arguments-differ,too-many-arguments
+    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+        """Return the select query based on kwargs provided."""
+        # pylint: disable=protected-access
+        query = (
+            Projects.select()
+            .join(ProjectUser, JOIN.LEFT_OUTER, on=(ProjectUser.project == Projects.id))
+            .join(Users, JOIN.LEFT_OUTER, on=(ProjectUser.user == Users.id))
+            .join(Relationships, JOIN.LEFT_OUTER, on=(Relationships.uuid == ProjectUser.relationship))
+            .join(InstitutionUser, JOIN.LEFT_OUTER, on=(Users.id == InstitutionUser.user))
+            .join(Institutions, JOIN.LEFT_OUTER, on=(InstitutionUser.institution == Institutions.id))
+            .join(ProjectInstrument, JOIN.LEFT_OUTER, on=(ProjectInstrument.project == Projects.id))
+            .join(Instruments, JOIN.LEFT_OUTER, on=(ProjectInstrument.instrument == Instruments.id))
+            .join(InstrumentGroup, JOIN.LEFT_OUTER, on=(InstrumentGroup.instrument == Instruments.id))
+            .join(Groups, JOIN.LEFT_OUTER, on=(InstrumentGroup.group == Groups.id))
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.project == Projects.id))
+            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.project == Projects.id))
+            .where(
+                (getattr(Projects, time_field) > time_delta) |
+                (getattr(ProjectUser, time_field) > time_delta) |
+                (getattr(Relationships, time_field) > time_delta) |
+                (getattr(InstitutionUser, time_field) > time_delta) |
+                (getattr(Institutions, time_field) > time_delta) |
+                (getattr(TransSIP, time_field) > time_delta) |
+                (getattr(TransSAP, time_field) > time_delta) |
+                (getattr(Instruments, time_field) > time_delta) |
+                (getattr(InstrumentGroup, time_field) > time_delta) |
+                (getattr(ProjectInstrument, time_field) > time_delta) |
+                (getattr(Groups, time_field) > time_delta))
+            .order_by(Projects.id)
+            .distinct()
+        )
+        # pylint: enable=protected-access
+        if enable_paging:
+            return query.paginate(page, items_per_page)
+        return query
 
     @staticmethod
     def obj_id(**proj_obj):
