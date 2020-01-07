@@ -17,12 +17,9 @@ def query_select_default_args(class_method):
     """Pull the default arguments out of kwargs."""
     def wrapper(*args, **kwargs):
         """Internal wrapper method."""
-        time_field = kwargs.get('time_field', 'updated')
         page = kwargs.pop('page', 0)
         items_per_page = kwargs.pop('items_per_page', 20)
         enable_paging = kwargs.pop('enable_paging', True)
-        if not kwargs.get('time_field', False):
-            kwargs['time_field'] = time_field
         query = class_method(*args, **kwargs)
         if enable_paging:
             return query.paginate(page, items_per_page)
@@ -51,7 +48,6 @@ class SearchBase:
 
     @classmethod
     @query_select_default_args
-    # pylint: disable=too-many-arguments
     def get_select_query(cls, time_delta, obj_cls, time_field):
         """Return the select query based on kwargs provided."""
         # pylint: disable=protected-access

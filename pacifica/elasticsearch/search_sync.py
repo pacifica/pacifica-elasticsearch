@@ -64,10 +64,11 @@ def start_work(work_queue):
     cli = es_client()
     job = work_queue.get()
     while job:
-        print('Starting {object} ({time_field}): {page} of {num_pages}'.format(**job))
+        num_pages = job.pop('num_pages')
+        print('Starting {object} ({time_field}): {page} of {num_pages}'.format(num_pages=num_pages, **job))
         try_doing_work(cli, job)
         work_queue.task_done()
-        print('Finished {object} ({time_field}): {page} of {num_pages}'.format(**job))
+        print('Finished {object} ({time_field}): {page} of {num_pages}'.format(num_pages=num_pages, **job))
         job = work_queue.get()
     work_queue.task_done()
 
@@ -87,11 +88,12 @@ def try_doing_work(cli, job):
 
 def yield_data(**kwargs):
     """yield objects from obj for bulk ingest."""
-    obj = kwargs['object']
+    obj = kwargs.pop('object')
+    exclude = kwargs.pop('exclude')
     obj_cls = ObjectInfoAPI.get_class_object_from_name(obj)
     render_cls = SearchRender.get_render_class(obj)
     query = render_cls.get_select_query(obj_cls=obj_cls, **kwargs)
-    return SearchRender.generate(obj, [qobj.to_hash() for qobj in query], kwargs['exclude'])
+    return SearchRender.generate(obj, [qobj.to_hash() for qobj in query], exclude)
 
 
 def create_worker_threads(threads, work_queue):
@@ -116,7 +118,7 @@ def generate_work(args, work_queue):
             render_cls = SearchRender.get_render_class(obj)
             query = render_cls.get_select_query(
                 obj_cls=obj_cls, time_delta=time_delta,
-                enable_paging=False, **(vars(args))
+                enable_paging=False, time_field=time_field
             )
             num_pages = int(ceil(float(query.count()) / args.items_per_page))
             for page in range(1, num_pages + 1):

@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
-from peewee import JOIN
-from pacifica.metadata.orm import Projects, TransSIP, TransSAP
-from .base import SearchBase, query_select_default_args
+from .base import SearchBase
 
 
 class ScienceThemesRender(SearchBase):
@@ -14,22 +12,6 @@ class ScienceThemesRender(SearchBase):
         'obj_id', 'display_name', 'keyword',
         'updated_date', 'created_date', 'release'
     ]
-
-    @classmethod
-    @query_select_default_args
-    def get_select_query(cls, time_delta, obj_cls, time_field):
-        """Return the select query based on kwargs provided."""
-        return (
-            Projects.select()
-            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.project == Projects.id))
-            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.project == Projects.id))
-            .where(
-                (getattr(Projects, time_field) > time_delta) |
-                (getattr(TransSIP, time_field) > time_delta) |
-                (getattr(TransSAP, time_field) > time_delta))
-            .order_by(Projects.id)
-            .distinct()
-        )
 
     @staticmethod
     def updated_date(**proj_obj):
