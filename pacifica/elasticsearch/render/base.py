@@ -18,9 +18,9 @@ def query_select_default_args(class_method):
     def wrapper(*args, **kwargs):
         """Internal wrapper method."""
         time_field = kwargs.get('time_field', 'updated')
-        page = kwargs.get('page', 0)
-        items_per_page = kwargs.get('items_per_page', 20)
-        enable_paging = kwargs.get('enable_paging', True)
+        page = kwargs.pop('page', 0)
+        items_per_page = kwargs.pop('items_per_page', 20)
+        enable_paging = kwargs.pop('enable_paging', True)
         if not kwargs.get('time_field', False):
             kwargs['time_field'] = time_field
         query = class_method(*args, **kwargs)
