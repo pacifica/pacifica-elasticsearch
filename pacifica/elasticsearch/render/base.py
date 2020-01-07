@@ -17,18 +17,15 @@ def query_select_default_args(class_method):
     """Pull the default arguments out of kwargs."""
     def wrapper(*args, **kwargs):
         """Internal wrapper method."""
-        attr_defaults = {
-            'time_field': 'updated',
-            'page': 0,
-            'items_per_page': 20,
-            'enable_paging': True
-        }
-        for attr, default in attr_defaults.items():
-            if not kwargs.get(attr, False):
-                kwargs[attr] = default
+        time_field = kwargs.get('time_field', 'updated')
+        page = kwargs.get('page', 0)
+        items_per_page = kwargs.get('items_per_page', 20)
+        enable_paging = kwargs.get('enable_paging', True)
+        if not kwargs.get('time_field', False):
+            kwargs['time_field'] = time_field
         query = class_method(*args, **kwargs)
-        if kwargs['enable_paging']:
-            return query.paginate(kwargs['page'], kwargs['items_per_page'])
+        if enable_paging:
+            return query.paginate(page, items_per_page)
         return query
     return wrapper
 
