@@ -20,11 +20,9 @@ class InstrumentsRender(SearchBase):
 
     @classmethod
     @query_select_default_args
-    # pylint: disable=arguments-differ,too-many-arguments
-    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+    def get_select_query(cls, time_delta, obj_cls, time_field):
         """Generate the select query for groups related to instruments."""
-        # pylint: disable=protected-access
-        query = (
+        return (
             Instruments.select()
             .join(InstrumentKeyValue, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.instrument == Instruments.id))
             .join(Keys, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.key == Keys.id))
@@ -39,10 +37,6 @@ class InstrumentsRender(SearchBase):
             .order_by(Instruments.id)
             .distinct()
         )
-        # pylint: enable=protected-access
-        if enable_paging:
-            return query.paginate(page, items_per_page)
-        return query
 
     @staticmethod
     def obj_id(**instrument_obj):

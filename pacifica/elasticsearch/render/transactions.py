@@ -30,8 +30,7 @@ class TransactionsRender(SearchBase):
 
     @classmethod
     @query_select_default_args
-    # pylint: disable=arguments-differ,too-many-arguments
-    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+    def get_select_query(cls, time_delta, obj_cls, time_field):
         """Return the select query based on kwargs provided."""
         # The alias() method does return a class
         # pylint: disable=invalid-name
@@ -41,8 +40,7 @@ class TransactionsRender(SearchBase):
         SIPProjects = Projects.alias()
         SAPProjects = Projects.alias()
         # pylint: enable=invalid-name
-        # pylint: disable=protected-access
-        query = (
+        return (
             Transactions.select()
             .join(TransactionUser, JOIN.LEFT_OUTER, on=(TransactionUser.transaction == Transactions.id))
             .join(DOITransaction, JOIN.LEFT_OUTER, on=(DOITransaction.transaction == TransactionUser.uuid))
@@ -83,10 +81,6 @@ class TransactionsRender(SearchBase):
             .order_by(Transactions.id)
             .distinct()
         )
-        # pylint: enable=protected-access
-        if enable_paging:
-            return query.paginate(page, items_per_page)
-        return query
 
     @staticmethod
     def obj_id(**trans_obj):

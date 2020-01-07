@@ -18,15 +18,13 @@ class InstitutionsRender(SearchBase):
 
     @classmethod
     @query_select_default_args
-    # pylint: disable=too-many-arguments
-    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+    def get_select_query(cls, time_delta, obj_cls, time_field):
         """Generate the select query for groups related to instruments."""
         # pylint: disable=invalid-name
         SIPTrans = Transactions.alias()
         SAPTrans = Transactions.alias()
         # pylint: enable=invalid-name
-        # pylint: disable=protected-access
-        query = (
+        return (
             Institutions.select()
             .join(InstitutionUser, JOIN.LEFT_OUTER, on=(InstitutionUser.institution == Institutions.id))
             .join(Users, JOIN.LEFT_OUTER, on=(InstitutionUser.user == Users.id))
@@ -45,10 +43,6 @@ class InstitutionsRender(SearchBase):
             .order_by(Institutions.id)
             .distinct()
         )
-        # pylint: enable=protected-access
-        if enable_paging:
-            return query.paginate(page, items_per_page)
-        return query
 
     @staticmethod
     def obj_id(**inst_obj):

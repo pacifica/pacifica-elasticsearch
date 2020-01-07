@@ -26,7 +26,10 @@ def query_select_default_args(class_method):
         for attr, default in attr_defaults.items():
             if not kwargs.get(attr, False):
                 kwargs[attr] = default
-        return class_method(*args, **kwargs)
+        query = class_method(*args, **kwargs)
+        if kwargs['enable_paging']:
+            return query.paginate(kwargs['page'], kwargs['items_per_page'])
+        return query
     return wrapper
 
 
@@ -52,16 +55,13 @@ class SearchBase:
     @classmethod
     @query_select_default_args
     # pylint: disable=too-many-arguments
-    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+    def get_select_query(cls, time_delta, obj_cls, time_field):
         """Return the select query based on kwargs provided."""
         # pylint: disable=protected-access
-        query = (obj_cls.select()
-                 .where(getattr(obj_cls, time_field) > time_delta)
-                 .order_by(obj_cls._meta.primary_key))
+        return (obj_cls.select()
+                .where(getattr(obj_cls, time_field) > time_delta)
+                .order_by(obj_cls._meta.primary_key))
         # pylint: enable=protected-access
-        if enable_paging:
-            return query.paginate(page, items_per_page)
-        return query
 
     @classmethod
     @search_lru_cache

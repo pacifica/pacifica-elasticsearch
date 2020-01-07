@@ -17,11 +17,9 @@ class ScienceThemesRender(SearchBase):
 
     @classmethod
     @query_select_default_args
-    # pylint: disable=arguments-differ,too-many-arguments
-    def get_select_query(cls, time_delta, obj_cls, time_field, page, enable_paging, items_per_page):
+    def get_select_query(cls, time_delta, obj_cls, time_field):
         """Return the select query based on kwargs provided."""
-        # pylint: disable=protected-access
-        query = (
+        return (
             Projects.select()
             .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.project == Projects.id))
             .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.project == Projects.id))
@@ -32,10 +30,6 @@ class ScienceThemesRender(SearchBase):
             .order_by(Projects.id)
             .distinct()
         )
-        # pylint: enable=protected-access
-        if enable_paging:
-            return query.paginate(page, items_per_page)
-        return query
 
     @staticmethod
     def updated_date(**proj_obj):
