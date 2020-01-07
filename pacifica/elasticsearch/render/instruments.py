@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
+from peewee import JOIN
+from pacifica.metadata.orm import Instruments, TransSIP, Keys, Values, InstrumentKeyValue
 from .keys import KeysRender
 from .values import ValuesRender
-from .base import SearchBase
+from .base import SearchBase, query_select_default_args
 
 
 class InstrumentsRender(SearchBase):
@@ -15,6 +17,26 @@ class InstrumentsRender(SearchBase):
         'updated_date', 'created_date'
     ]
     rel_objs = ['key_value_pairs']
+
+    @classmethod
+    @query_select_default_args
+    def get_select_query(cls, time_delta, obj_cls, time_field):
+        """Generate the select query for groups related to instruments."""
+        return (
+            Instruments.select()
+            .join(InstrumentKeyValue, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.instrument == Instruments.id))
+            .join(Keys, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.key == Keys.id))
+            .join(Values, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.key == Values.id))
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.instrument == Instruments.id))
+            .where(
+                (getattr(Instruments, time_field) > time_delta) |
+                (getattr(InstrumentKeyValue, time_field) > time_delta) |
+                (getattr(TransSIP, time_field) > time_delta) |
+                (getattr(Values, time_field) > time_delta) |
+                (getattr(Keys, time_field) > time_delta))
+            .order_by(Instruments.id)
+            .distinct()
+        )
 
     @staticmethod
     def obj_id(**instrument_obj):

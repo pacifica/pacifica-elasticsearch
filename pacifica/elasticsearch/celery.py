@@ -31,6 +31,7 @@ class CeleryQueue:
         # pylint: disable=cyclic-import,import-outside-toplevel
         from .tasks import work_on_job
         # pylint: enable=cyclic-import
+        job_dict.pop('num_pages')
         result = work_on_job.delay(job_dict)
         self.all_jobs.append((job_dict, result))
         if not job_dict['object'] in self.by_obj_type:
