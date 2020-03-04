@@ -142,7 +142,6 @@
             "required": [
               "created_date",
               "display_name",
-              "instruments",
               "keyword",
               "obj_id",
               "release",
