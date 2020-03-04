@@ -61,7 +61,7 @@ class InstrumentsRender(SearchBase):
     @staticmethod
     def keyword(**instrument_obj):
         """Return the rendered string for keywords."""
-        return text_type('{name}').format(**instrument_obj)
+        return text_type('{display_name}').format(**instrument_obj)
 
     @classmethod
     def release(cls, **_instrument_obj):
