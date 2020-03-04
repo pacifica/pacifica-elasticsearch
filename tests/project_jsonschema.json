@@ -92,7 +92,6 @@
               "instruments",
               "keyword",
               "obj_id",
-              "release",
               "type",
               "updated_date"
             ],
@@ -131,7 +130,6 @@
               "display_name",
               "keyword",
               "obj_id",
-              "release",
               "type",
               "updated_date"
             ],
@@ -208,7 +206,6 @@
               "keyword",
               "long_name",
               "obj_id",
-              "release",
               "type",
               "updated_date"
             ],
@@ -259,7 +256,6 @@
               "display_name",
               "keyword",
               "obj_id",
-              "release",
               "type",
               "updated_date"
             ],
@@ -319,7 +315,6 @@
                   "display_name",
                   "keyword",
                   "obj_id",
-                  "release",
                   "type",
                   "updated_date"
                 ],
