@@ -19,12 +19,12 @@ class ProjectsRender(SearchBase):
     fields = [
         'obj_id', 'display_name', 'abstract', 'title',
         'keyword', 'release', 'closed_date', 'actual_end_date',
-        'updated_date', 'created_date', 'actual_start_date',
-        'released_count'
+        'updated_date', 'created_date', 'actual_start_date'
     ]
 
     rel_objs = [
-        'users', 'institutions', 'instruments', 'groups', 'science_themes'
+        'users', 'institutions', 'instruments', 'groups',
+        'released_count', 'science_themes'
     ]
 
     @classmethod
@@ -125,7 +125,7 @@ class ProjectsRender(SearchBase):
         return 'false'
 
     @classmethod
-    def transaction_release(cls, trans_id):
+    def _transaction_release(cls, trans_id):
         """Return 'true' if transaction has been release."""
         # pylint: disable=import-outside-toplevel
         # pylint: disable=cyclic-import
@@ -133,11 +133,11 @@ class ProjectsRender(SearchBase):
         return TransactionsRender.release(_id=trans_id)
 
     @classmethod
-    def released_count(cls, **proj_obj):
+    def released_count_obj_lists(cls, **proj_obj):
         """Count the released transactions associated with this project."""
         ret = 0
         for trans_id in cls._transsip_transsap_merge({'project': proj_obj['_id']}, '_id'):
-            if cls.transaction_release(trans_id) == 'true':
+            if cls._transaction_release(trans_id) == 'true':
                 ret += 1
         return ret
 

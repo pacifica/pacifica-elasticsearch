@@ -223,7 +223,7 @@
           "const": "true"
         },
         "released_count": {
-          "const": 2
+          "const": 1
         },
         "science_themes": {
           "items": {
