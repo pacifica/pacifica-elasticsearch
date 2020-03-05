@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 """Search transaction rendering methods."""
 from six import text_type
-from peewee import JOIN, DoesNotExist
+from peewee import JOIN
 from pacifica.metadata.orm import Projects, Users, ProjectUser, Relationships, Institutions, InstitutionUser
 from pacifica.metadata.orm import Instruments, ProjectInstrument, Groups, InstrumentGroup, TransSIP, TransSAP
-from pacifica.metadata.orm import TransactionUser
 from .base import SearchBase, query_select_default_args
 from .users import UsersRender
 from .institutions import InstitutionsRender
@@ -128,15 +127,9 @@ class ProjectsRender(SearchBase):
     @classmethod
     def transaction_release(cls, trans_id):
         """Return 'true' if transaction has been release."""
-        predicate = ((TransactionUser.transaction == trans_id) & (
-            TransactionUser.relationship == cls.releaser_uuid))
-        query = (TransactionUser.select().where(predicate))
-        try:
-            query.get()
-            ret = 'true'
-        except DoesNotExist:
-            ret = 'false'
-        return ret
+        # pylint: disable=import-outside-toplevel
+        from .transactions import TransactionsRender
+        return TransactionsRender.release(_id=trans_id)
 
     @classmethod
     def released_count(cls, **proj_obj):
