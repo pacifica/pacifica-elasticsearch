@@ -128,6 +128,7 @@ class ProjectsRender(SearchBase):
     def transaction_release(cls, trans_id):
         """Return 'true' if transaction has been release."""
         # pylint: disable=import-outside-toplevel
+        # pylint: disable=cyclic-import
         from .transactions import TransactionsRender
         return TransactionsRender.release(_id=trans_id)
 
