@@ -136,7 +136,7 @@ class TestElasticsearch(TestCase):
     def test_keyword_query(self):
         """Test the keyword query for users."""
         self.test_main()
-        for query_example in ['issue_9.json', 'issue_15_projects.json', 'issue_15_transactions.json']:
+        for query_example in ['issue_9.json', 'issue_15_projects.json', 'issue_15_transactions.json', 'issue_23_projects.json']:
             post_data = json.loads(open(os.path.join(os.path.dirname(__file__), query_example)).read())
             resp = requests.post('http://localhost:9200/_search', json=post_data)
             bad_message = """
