@@ -11,6 +11,7 @@ from .institutions import InstitutionsRender
 from .instruments import InstrumentsRender
 from .groups import GroupsRender
 from .science_themes import ScienceThemesRender
+from .transactions import TransactionsRender
 
 
 class ProjectsRender(SearchBase):
@@ -19,7 +20,8 @@ class ProjectsRender(SearchBase):
     fields = [
         'obj_id', 'display_name', 'abstract', 'title',
         'keyword', 'release', 'closed_date', 'actual_end_date',
-        'updated_date', 'created_date', 'actual_start_date'
+        'updated_date', 'created_date', 'actual_start_date',
+        'released_count'
     ]
 
     rel_objs = [
@@ -122,6 +124,15 @@ class ProjectsRender(SearchBase):
         if results and results[0].get('accepted_date', False):
             return 'true'
         return 'false'
+
+    @classmethod
+    def released_count(cls, **proj_obj):
+        """Count the released transactions associated with this project."""
+        ret = 0
+        for trans_id in cls._transsip_transsap_merge({'project': proj_obj['_id']}, '_id'):
+            if TransactionsRender.release(_id=trans_id) == 'true':
+                ret += 1
+        return ret
 
     @classmethod
     def get_transactions(cls, **proj_obj):
