@@ -1,0 +1,247 @@
+{
+  "aggs": {
+    "co_principal_investigator9": {
+      "aggs": {
+        "users.co_principle_investigator.keyword": {
+          "terms": {
+            "field": "users.co_principle_investigator.keyword",
+            "size": 10
+          }
+        },
+        "users.co_principle_investigator.keyword_count": {
+          "cardinality": {
+            "field": "users.co_principle_investigator.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "groups14": {
+      "aggs": {
+        "groups.keyword": {
+          "terms": {
+            "field": "groups.keyword",
+            "size": 10
+          }
+        },
+        "groups.keyword_count": {
+          "cardinality": {
+            "field": "groups.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "institution12": {
+      "aggs": {
+        "institutions.keyword": {
+          "terms": {
+            "field": "institutions.keyword",
+            "size": 10
+          }
+        },
+        "institutions.keyword_count": {
+          "cardinality": {
+            "field": "institutions.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "instruments13": {
+      "aggs": {
+        "instruments.keyword": {
+          "terms": {
+            "field": "instruments.keyword",
+            "size": 10
+          }
+        },
+        "instruments.keyword_count": {
+          "cardinality": {
+            "field": "instruments.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "member_of10": {
+      "aggs": {
+        "users.member_of.keyword": {
+          "terms": {
+            "field": "users.member_of.keyword",
+            "size": 10
+          }
+        },
+        "users.member_of.keyword_count": {
+          "cardinality": {
+            "field": "users.member_of.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "principal_investigator8": {
+      "aggs": {
+        "users.principle_investigator.keyword": {
+          "terms": {
+            "field": "users.principle_investigator.keyword",
+            "size": 10
+          }
+        },
+        "users.principle_investigator.keyword_count": {
+          "cardinality": {
+            "field": "users.principle_investigator.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "project3": {
+      "aggs": {
+        "obj_id.keyword": {
+          "terms": {
+            "field": "obj_id.keyword",
+            "size": 10
+          }
+        },
+        "obj_id.keyword_count": {
+          "cardinality": {
+            "field": "obj_id.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "released_count6": {
+      "aggs": {
+        "transaction_count": {
+          "range": {
+            "field": "transaction_count",
+            "ranges": [
+              {
+                "key": "All"
+              },
+              {
+                "from": 0,
+                "key": "No Datasets",
+                "to": 1
+              },
+              {
+                "from": 1,
+                "key": "Up to 50",
+                "to": 51
+              },
+              {
+                "from": 51,
+                "key": "51 to 400",
+                "to": 401
+              },
+              {
+                "from": 401,
+                "key": "401 to 1000",
+                "to": 1001
+              },
+              {
+                "from": 1001,
+                "key": "More than 1000"
+              }
+            ]
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "science_theme11": {
+      "aggs": {
+        "science_themes.keyword": {
+          "terms": {
+            "field": "science_themes.keyword",
+            "size": 10
+          }
+        },
+        "science_themes.keyword_count": {
+          "cardinality": {
+            "field": "science_themes.keyword"
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    },
+    "transaction_count5": {
+      "aggs": {
+        "transaction_count": {
+          "range": {
+            "field": "transaction_count",
+            "ranges": [
+              {
+                "key": "All"
+              },
+              {
+                "from": 0,
+                "key": "No Datasets",
+                "to": 1
+              },
+              {
+                "from": 1,
+                "key": "Up to 50",
+                "to": 51
+              },
+              {
+                "from": 51,
+                "key": "51 to 400",
+                "to": 401
+              },
+              {
+                "from": 401,
+                "key": "401 to 1000",
+                "to": 1001
+              },
+              {
+                "from": 1001,
+                "key": "More than 1000"
+              }
+            ]
+          }
+        }
+      },
+      "filter": {
+        "match_all": {}
+      }
+    }
+  },
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "type": "projects"
+          }
+        },
+        {
+          "script": {
+            "script": "doc['transaction_ids'].length > 0"
+          }
+        }
+      ]
+    }
+  },
+  "size": 15
+}

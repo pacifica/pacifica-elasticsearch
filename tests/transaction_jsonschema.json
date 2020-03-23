@@ -55,7 +55,22 @@
               "updated_date": {
                 "type": "string"
               }
-            }
+            },
+            "required": [
+              "created_date",
+              "ctime",
+              "display_name",
+              "hashsum",
+              "hashtype",
+              "keyword",
+              "mtime",
+              "name",
+              "obj_id",
+              "size",
+              "subdir",
+              "type",
+              "updated_date"
+            ]
           },
           "type": "array"
         },
@@ -95,6 +110,15 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "created_date",
+                    "display_name",
+                    "keyword",
+                    "obj_id",
+                    "release",
+                    "type",
+                    "updated_date"
+                  ],
                   "type": "object"
                 },
                 "type": "array"
@@ -115,6 +139,15 @@
                 "type": "string"
               }
             },
+            "required": [
+              "created_date",
+              "display_name",
+              "keyword",
+              "obj_id",
+              "release",
+              "type",
+              "updated_date"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -139,6 +172,12 @@
                 "const": "groups"
               }
             },
+            "required": [
+              "display_name",
+              "keyword",
+              "obj_id",
+              "type"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -181,7 +220,16 @@
                         "updated_date": {
                           "type": "string"
                         }
-                      }
+                      },
+                      "required": [
+                        "created_date",
+                        "display_name",
+                        "keyword",
+                        "obj_id",
+                        "released",
+                        "type",
+                        "updated_date"
+                      ]
                     },
                     "type": "array"
                   },
@@ -205,6 +253,10 @@
                           "const": "19"
                         }
                       },
+                      "required": [
+                        "key",
+                        "value"
+                      ],
                       "type": "object"
                     },
                     "type": "array"
@@ -234,11 +286,26 @@
                         "updated_date": {
                           "type": "string"
                         }
-                      }
+                      },
+                      "required": [
+                        "created_date",
+                        "display_name",
+                        "keyword",
+                        "obj_id",
+                        "released",
+                        "type",
+                        "updated_date"
+                      ]
                     },
                     "type": "array"
                   }
                 },
+                "required": [
+                  "key_objs",
+                  "key_value_hash",
+                  "key_value_objs",
+                  "value_objs"
+                ],
                 "type": "object"
               },
               "keyword": {
@@ -260,6 +327,15 @@
                 "type": "string"
               }
             },
+            "required": [
+              "created_date",
+              "display_name",
+              "keyword",
+              "obj_id",
+              "release",
+              "type",
+              "updated_date"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -297,6 +373,16 @@
                   }
                 }
               },
+              "required": [
+                "created_date",
+                "display_name",
+                "keyword",
+                "obj_id",
+                "release",
+                "released",
+                "type",
+                "updated_date"
+              ],
               "type": "array"
             },
             "key_value_hash": {
@@ -319,6 +405,10 @@
                     "const": "27"
                   }
                 },
+                "required": [
+                  "key",
+                  "value"
+                ],
                 "type": "object"
               },
               "type": "array"
@@ -351,7 +441,15 @@
                   "updated_date": {
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "created_date",
+                  "display_name",
+                  "keyword",
+                  "obj_id",
+                  "type",
+                  "updated_date"
+                ]
               },
               "type": "array"
             }
@@ -408,6 +506,16 @@
                 "type": "string"
               }
             },
+            "required": [
+              "abstract",
+              "created_date",
+              "display_name",
+              "keyword",
+              "obj_id",
+              "title",
+              "type",
+              "updated_date"
+            ],
             "type": "object"
           },
           "type": "array"
@@ -449,7 +557,15 @@
                   "updated_date": {
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "created_date",
+                  "display_name",
+                  "keyword",
+                  "obj_id",
+                  "type",
+                  "updated_date"
+                ]
               },
               "type": "array"
             },
@@ -479,6 +595,14 @@
                     "type": "string"
                   }
                 },
+                "required": [
+                  "created_date",
+                  "display_name",
+                  "keyword",
+                  "obj_id",
+                  "type",
+                  "updated_date"
+                ],
                 "type": "object"
               },
               "type": "array"
@@ -508,7 +632,15 @@
                   "updated_date": {
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "created_date",
+                  "display_name",
+                  "keyword",
+                  "obj_id",
+                  "type",
+                  "updated_date"
+                ]
               },
               "type": "array"
             }
