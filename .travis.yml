@@ -24,7 +24,7 @@ before_script:
   - pip install ansible
   - ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
   - ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=elasticsearch"
-  - pip install 'redis<3.4'
+  - pip install 'celery>4.4.1'
 
 jobs:
   include:
