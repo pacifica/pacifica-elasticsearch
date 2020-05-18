@@ -1,6 +1,0 @@
-celery
-elasticsearch
-pacifica-metadata>=0.11.0,<1
-pacifica-namespace
-python-dateutil
-tqdm

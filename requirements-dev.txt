@@ -1,4 +1,3 @@
--r requirements.txt
 coverage
 jsonschema
 pacifica-policy>=0.7.0,<1
