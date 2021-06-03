@@ -46,6 +46,18 @@ class SearchBase:
     releaser_uuid = str(Relationships.get(Relationships.name == 'authorized_releaser').uuid)
     search_required_uuid = str(Relationships.get(Relationships.name == 'search_required').uuid)
 
+
+    @classmethod
+    @query_select_default_args
+    def get_index_query(cls,obj_cls,**kwargs):
+        """Generate the select query to give all the rows of class"""
+        return (obj_cls.select(obj_cls.id))  # this shoudl work, but peewee borks it
+        #return (obj_cls.select())
+
+    @classmethod
+    def get_render_query(cls,obj_cls,id):
+        return (obj_cls.select().where(obj_cls.id == id))
+
     @classmethod
     @query_select_default_args
     def get_select_query(cls, time_delta, obj_cls, time_field):

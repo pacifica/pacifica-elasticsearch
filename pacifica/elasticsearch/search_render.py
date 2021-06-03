@@ -32,10 +32,14 @@ class SearchRender:
         return False
 
     @classmethod
-    def generate(cls, obj_cls, objs, exclude):
+    def generate(cls, obj_cls, objs, exclude, db_cls):
         """generate the institution object."""
+        #print("generate",cls,obj_cls,objs,exclude)
         render_cls = cls.get_render_class(obj_cls)
-        for obj in objs:
+        #print(render_cls)
+        #convert to full renderable objects
+        renderable_objs = [render_cls.get_render_query(db_cls,r).get().to_hash() for r in objs]
+        for obj in renderable_objs:
             if cls.object_exclude(obj_cls, obj, exclude):
                 continue
             yield {

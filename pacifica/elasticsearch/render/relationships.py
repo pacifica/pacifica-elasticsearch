@@ -13,6 +13,15 @@ class RelationshipsRender(SearchBase):
         'updated_date', 'created_date'
     ]
 
+    @classmethod
+    def get_index_query(cls,obj_cls,**kwargs):
+        """Generate the select query to give all the rows of class"""
+        return (obj_cls.select(obj_cls.uuid))
+
+    @classmethod
+    def get_render_query(cls,obj_cls,id):
+        return (obj_cls.select().where(obj_cls.uuid == id))
+
     @staticmethod
     def obj_id(**rel_obj):
         """Return string for object id."""

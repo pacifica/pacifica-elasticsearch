@@ -17,6 +17,25 @@ class InstitutionsRender(SearchBase):
     ]
 
     @classmethod
+    def get_render_query(cls,obj_cls,id):
+        """Generate the select query for groups related to instruments."""
+        # pylint: disable=invalid-name
+        SIPTrans = Transactions.alias()
+        SAPTrans = Transactions.alias()
+        # pylint: enable=invalid-name
+        return (
+            Institutions.select()
+            .join(InstitutionUser, JOIN.LEFT_OUTER, on=(InstitutionUser.institution == Institutions.id))
+            .join(Users, JOIN.LEFT_OUTER, on=(InstitutionUser.user == Users.id))
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.submitter == Users.id))
+            .join(SIPTrans, JOIN.LEFT_OUTER, on=(SIPTrans.id == TransSIP.id))
+            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.submitter == Users.id))
+            .join(SAPTrans, JOIN.LEFT_OUTER, on=(SAPTrans.id == TransSAP.id))
+            .where( Institutions.id == id )
+        )
+
+
+    @classmethod
     @query_select_default_args
     def get_select_query(cls, time_delta, obj_cls, time_field):
         """Generate the select query for groups related to instruments."""

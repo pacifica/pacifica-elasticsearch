@@ -16,6 +16,15 @@ class UsersRender(SearchBase):
     ]
 
     @classmethod
+    def get_render_query(cls,obj_cls,id):
+         return (
+            Users.select()
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.submitter == Users.id))
+            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.submitter == Users.id))
+            .where(Users.id==id)
+        )
+
+    @classmethod
     @query_select_default_args
     def get_select_query(cls, time_delta, obj_cls, time_field):
         """Return the select query based on kwargs provided."""
