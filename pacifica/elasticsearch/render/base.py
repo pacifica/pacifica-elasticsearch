@@ -5,7 +5,7 @@ from functools import lru_cache, wraps
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from pacifica.metadata.orm import Relationships
 from ..config import get_config
-
+from memoization import cached
 
 _LRU_GLOBAL_ARGS = {
     'maxsize': get_config().getint('elasticsearch', 'cache_size'),
@@ -94,6 +94,7 @@ class SearchBase:
         return rel_cls.__module__.split('.')[-1]
 
     @classmethod
+    @cached(max_size=1000)
     def render(cls, obj, render_rel_objs=False, render_trans_ids=False):
         """Render the object and return it."""
         ret = {'type': cls._cls_name_to_module(cls)}
