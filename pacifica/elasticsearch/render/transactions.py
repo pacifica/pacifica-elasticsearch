@@ -235,12 +235,14 @@ class TransactionsRender(SearchBase):
     @classmethod
     def projects_obj_lists(cls, **trans_obj):
         """Get the projects related to the transaction."""
-        return [
-            ProjectsRender.render(
-                cls.get_rel_by_args('projects', _id=proj_id)[0]
-            ) for proj_id in cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'project')
-        ]
-
+        try:
+            return [
+                ProjectsRender.render(
+                    cls.get_rel_by_args('projects', _id=proj_id)[0]
+                ) for proj_id in cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'project')
+            ]
+        except IndexError:
+            print("IndexError rendering project for transaction ",trans_obj)
     @classmethod
     def key_value_pairs_obj_lists(cls, **trans_obj):
         """Get the key value pairs related to the transaction."""
