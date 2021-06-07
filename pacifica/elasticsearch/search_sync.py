@@ -5,8 +5,7 @@ from __future__ import print_function, absolute_import
 import os
 from json import dumps, loads
 from time import sleep
-from threading import Thread
-from queue import Queue
+from multiprocessing import Process, JoinableQueue
 from math import ceil
 from datetime import datetime
 from itertools import zip_longest
@@ -100,7 +99,7 @@ def create_worker_threads(threads, work_queue):
     """Create the worker threads and return the list."""
     work_threads = []
     for _i in range(threads):
-        wthread = Thread(target=start_work, args=(work_queue,))
+        wthread = Process(target=start_work, args=(work_queue,))
         wthread.daemon = True
         wthread.start()
         work_threads.append(wthread)
@@ -144,7 +143,7 @@ def search_sync(args):
     if args.celery:
         work_queue = CeleryQueue()
     else:
-        work_queue = Queue(32)
+        work_queue = JoinableQueue(32)
         work_threads = create_worker_threads(args.threads, work_queue)
     generate_work(args, work_queue)
     if args.celery:
