@@ -94,7 +94,7 @@ class SearchBase:
         return rel_cls.__module__.split('.')[-1]
 
     @classmethod
-    @cached(max_size=1000)
+    @cached(max_size=5000)
     def render(cls, obj, render_rel_objs=False, render_trans_ids=False):
         """Render the object and return it."""
         ret = {'type': cls._cls_name_to_module(cls)}
