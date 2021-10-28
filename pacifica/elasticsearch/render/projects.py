@@ -216,8 +216,11 @@ class ProjectsRender(SearchBase):
         for proj_user_obj in cls.get_rel_by_args('project_user', project=proj_obj['_id']):
             rel_obj = cls.get_rel_by_args('relationships', uuid=proj_user_obj['relationship'])[0]
             rel_list = ret.get(rel_obj['name'], [])
-            rel_list.append(
-                UsersRender.render(cls.get_rel_by_args('users', _id=proj_user_obj['user'])[0])
-            )
+            try:
+                rel_list.append(
+                    UsersRender.render(cls.get_rel_by_args('users', _id=proj_user_obj['user'])[0])
+                )
+            except IndexError:
+                print("IndexError getting user for project ", proj_user_obj)
             ret[rel_obj['name']] = rel_list
         return ret

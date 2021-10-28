@@ -76,12 +76,18 @@ def try_doing_work(cli, job):
     """Try doing some work even if you fail."""
     tries_left = 5
     success = False
+    data = yield_data(**job)
     while not success and tries_left:
         try:
-            helpers.bulk(cli, yield_data(**job))
+            helpers.bulk(cli, data)
             success = True
-        except ElasticsearchException:  # pragma: no cover
+        except ElasticsearchException as msg:  # pragma: no cover
+            print("ElasticsearchException:",tries_left,msg)
             tries_left -= 1
+        except MemoryError as msg: # pragma: no cover
+            print("MemroyError:",tries_left,msg)
+            tries_left -= 1
+            sleep(5)
     return success
 
 
