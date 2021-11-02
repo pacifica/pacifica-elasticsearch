@@ -82,10 +82,10 @@ def try_doing_work(cli, job):
             helpers.bulk(cli, data)
             success = True
         except ElasticsearchException as msg:  # pragma: no cover
-            print("ElasticsearchException:",tries_left,msg)
+            print("ElasticsearchException:",tries_left,msg[:100])
             tries_left -= 1
         except MemoryError as msg: # pragma: no cover
-            print("MemroyError:",tries_left,msg)
+            print("MemoryError:",tries_left,msg[:100])
             tries_left -= 1
             sleep(5)
     return success

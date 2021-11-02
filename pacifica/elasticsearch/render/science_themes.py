@@ -3,7 +3,7 @@
 """Search transaction rendering methods."""
 from six import text_type
 from .base import SearchBase
-
+from peewee import DatabaseError
 
 class ScienceThemesRender(SearchBase):
     """Render an science theme for search."""
@@ -48,8 +48,11 @@ class ScienceThemesRender(SearchBase):
         """Return the list of transaction ids for the science theme."""
         ret = set()
         for rel_proj_obj in cls.get_rel_by_args('projects', science_theme=proj_obj['science_theme']):
-            ret.update([
-                'transactions_{}'.format(trans_id)
-                for trans_id in cls._transsip_transsap_merge({'project': rel_proj_obj['_id']}, '_id')
-            ])
+            try:
+                ret.update([
+                    'transactions_{}'.format(trans_id)
+                    for trans_id in cls._transsip_transsap_merge({'project': rel_proj_obj['_id']}, '_id')
+                ])
+            except peewee.DatabaseError as msg:
+                print("DatabaseError rendering transactions for science themes ",proj_obj,msg)
         return list(ret)
