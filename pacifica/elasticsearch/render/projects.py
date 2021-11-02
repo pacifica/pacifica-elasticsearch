@@ -28,6 +28,24 @@ class ProjectsRender(SearchBase):
     ]
 
     @classmethod
+    def get_render_query(cls,obj_cls,id):
+        return (
+            Projects.select()
+            .join(ProjectUser, JOIN.LEFT_OUTER, on=(ProjectUser.project == Projects.id))
+            .join(Users, JOIN.LEFT_OUTER, on=(ProjectUser.user == Users.id))
+            .join(Relationships, JOIN.LEFT_OUTER, on=(Relationships.uuid == ProjectUser.relationship))
+            .join(InstitutionUser, JOIN.LEFT_OUTER, on=(Users.id == InstitutionUser.user))
+            .join(Institutions, JOIN.LEFT_OUTER, on=(InstitutionUser.institution == Institutions.id))
+            .join(ProjectInstrument, JOIN.LEFT_OUTER, on=(ProjectInstrument.project == Projects.id))
+            .join(Instruments, JOIN.LEFT_OUTER, on=(ProjectInstrument.instrument == Instruments.id))
+            .join(InstrumentGroup, JOIN.LEFT_OUTER, on=(InstrumentGroup.instrument == Instruments.id))
+            .join(Groups, JOIN.LEFT_OUTER, on=(InstrumentGroup.group == Groups.id))
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.project == Projects.id))
+            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.project == Projects.id))
+            .where(Projects.id == id)
+        )
+
+    @classmethod
     @query_select_default_args
     def get_select_query(cls, time_delta, obj_cls, time_field):
         """Return the select query based on kwargs provided."""
@@ -198,8 +216,11 @@ class ProjectsRender(SearchBase):
         for proj_user_obj in cls.get_rel_by_args('project_user', project=proj_obj['_id']):
             rel_obj = cls.get_rel_by_args('relationships', uuid=proj_user_obj['relationship'])[0]
             rel_list = ret.get(rel_obj['name'], [])
-            rel_list.append(
-                UsersRender.render(cls.get_rel_by_args('users', _id=proj_user_obj['user'])[0])
-            )
+            try:
+                rel_list.append(
+                    UsersRender.render(cls.get_rel_by_args('users', _id=proj_user_obj['user'])[0])
+                )
+            except IndexError:
+                print("IndexError getting user for project ", proj_user_obj)
             ret[rel_obj['name']] = rel_list
         return ret

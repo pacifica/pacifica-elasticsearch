@@ -21,6 +21,16 @@ class GroupsRender(SearchBase):
     ]
 
     @classmethod
+    def get_render_query(cls,obj_cls,id):
+        """Generate the select query for groups related to instruments."""
+        return (
+            Groups.select()
+            .join(InstrumentGroup, JOIN.LEFT_OUTER, on=(InstrumentGroup.group == Groups.id))
+            .join(Instruments, JOIN.LEFT_OUTER, on=(Instruments.id == InstrumentGroup.instrument))
+            .where( Groups.id == id )
+        )
+
+    @classmethod
     @query_select_default_args
     def get_select_query(cls, time_delta, obj_cls, time_field):
         """Generate the select query for groups related to instruments."""

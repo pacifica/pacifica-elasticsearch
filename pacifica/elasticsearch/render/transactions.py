@@ -27,6 +27,38 @@ class TransactionsRender(SearchBase):
     rel_objs = [
         'users', 'instruments', 'groups', 'projects', 'key_value_pairs', 'files'
     ]
+    @classmethod
+    def get_render_query(cls,obj_cls,id):
+        # The alias() method does return a class
+        # pylint: disable=invalid-name
+        ReleaseUsers = Users.alias()
+        SIPUsers = Users.alias()
+        SAPUsers = Users.alias()
+        SIPProjects = Projects.alias()
+        SAPProjects = Projects.alias()
+        # pylint: enable=invalid-name
+        return (
+            Transactions.select()
+            .join(TransactionUser, JOIN.LEFT_OUTER, on=(TransactionUser.transaction == Transactions.id))
+            .join(DOITransaction, JOIN.LEFT_OUTER, on=(DOITransaction.transaction == TransactionUser.uuid))
+            .join(Relationships, JOIN.LEFT_OUTER, on=(Relationships.uuid == TransactionUser.relationship))
+            .join(ReleaseUsers, JOIN.LEFT_OUTER, on=(TransactionUser.user == ReleaseUsers.id))
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.id == Transactions.id))
+            .join(TransSAP, JOIN.LEFT_OUTER, on=(TransSAP.id == Transactions.id))
+            .join(SIPUsers, JOIN.LEFT_OUTER, on=(TransSIP.submitter == SIPUsers.id))
+            .join(SAPUsers, JOIN.LEFT_OUTER, on=(TransSAP.submitter == SAPUsers.id))
+            .join(Instruments, JOIN.LEFT_OUTER, on=(Instruments.id == TransSIP.instrument))
+            .join(SIPProjects, JOIN.LEFT_OUTER, on=(SIPProjects.id == TransSIP.project))
+            .join(SAPProjects, JOIN.LEFT_OUTER, on=(SAPProjects.id == TransSAP.project))
+            .join(InstrumentGroup, JOIN.LEFT_OUTER, on=(InstrumentGroup.instrument == TransSIP.instrument))
+            .join(Groups, JOIN.LEFT_OUTER, on=(Groups.id == InstrumentGroup.group))
+            .join(Files, JOIN.LEFT_OUTER, on=(Files.transaction == Transactions.id))
+            .join(TransactionKeyValue, JOIN.LEFT_OUTER, on=(TransactionKeyValue.transaction == Transactions.id))
+            .join(Keys, JOIN.LEFT_OUTER, on=(TransactionKeyValue.key == Keys.id))
+            .join(Values, JOIN.LEFT_OUTER, on=(TransactionKeyValue.value == Values.id))
+            .where(Transactions.id==id)
+        )
+
 
     @classmethod
     @query_select_default_args
@@ -160,9 +192,12 @@ class TransactionsRender(SearchBase):
         """Get the user objects and relationships."""
         ret = {'submitter': []}
         for user_id in cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'submitter'):
-            ret['submitter'].append(
-                UsersRender.render(cls.get_rel_by_args('users', _id=user_id)[0])
-            )
+            try:
+                ret['submitter'].append(
+                    UsersRender.render(cls.get_rel_by_args('users', _id=user_id)[0])
+                )
+            except IndexError: # This happens when a user does not exist, or is 'deleted'
+                pass
         for trans_user_obj in cls.get_rel_by_args('transaction_user', transaction=trans_obj['_id']):
             rel_obj = cls.get_rel_by_args('relationships', uuid=trans_user_obj['relationship'])[0]
             rel_list = ret.get(rel_obj['name'], [])
@@ -200,12 +235,14 @@ class TransactionsRender(SearchBase):
     @classmethod
     def projects_obj_lists(cls, **trans_obj):
         """Get the projects related to the transaction."""
-        return [
-            ProjectsRender.render(
-                cls.get_rel_by_args('projects', _id=proj_id)[0]
-            ) for proj_id in cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'project')
-        ]
-
+        try:
+            return [
+                ProjectsRender.render(
+                    cls.get_rel_by_args('projects', _id=proj_id)[0]
+                ) for proj_id in cls._transsip_transsap_merge({'_id': trans_obj['_id']}, 'project')
+            ]
+        except IndexError:
+            print("IndexError rendering project for transaction ",trans_obj)
     @classmethod
     def key_value_pairs_obj_lists(cls, **trans_obj):
         """Get the key value pairs related to the transaction."""

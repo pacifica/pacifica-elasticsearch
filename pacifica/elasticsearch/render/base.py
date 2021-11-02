@@ -5,7 +5,7 @@ from functools import lru_cache, wraps
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from pacifica.metadata.orm import Relationships
 from ..config import get_config
-
+from memoization import cached
 
 _LRU_GLOBAL_ARGS = {
     'maxsize': get_config().getint('elasticsearch', 'cache_size'),
@@ -46,6 +46,18 @@ class SearchBase:
     releaser_uuid = str(Relationships.get(Relationships.name == 'authorized_releaser').uuid)
     search_required_uuid = str(Relationships.get(Relationships.name == 'search_required').uuid)
 
+
+    @classmethod
+    @query_select_default_args
+    def get_index_query(cls,obj_cls,**kwargs):
+        """Generate the select query to give all the rows of class"""
+        return (obj_cls.select(obj_cls.id))  # this shoudl work, but peewee borks it
+        #return (obj_cls.select())
+
+    @classmethod
+    def get_render_query(cls,obj_cls,id):
+        return (obj_cls.select().where(obj_cls.id == id))
+
     @classmethod
     @query_select_default_args
     def get_select_query(cls, time_delta, obj_cls, time_field):
@@ -82,6 +94,7 @@ class SearchBase:
         return rel_cls.__module__.split('.')[-1]
 
     @classmethod
+    @cached(max_size=5000)
     def render(cls, obj, render_rel_objs=False, render_trans_ids=False):
         """Render the object and return it."""
         ret = {'type': cls._cls_name_to_module(cls)}

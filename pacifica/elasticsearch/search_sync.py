@@ -5,8 +5,7 @@ from __future__ import print_function, absolute_import
 import os
 from json import dumps, loads
 from time import sleep
-from threading import Thread
-from queue import Queue
+from multiprocessing import Process, JoinableQueue
 from math import ceil
 from datetime import datetime
 from itertools import zip_longest
@@ -77,12 +76,18 @@ def try_doing_work(cli, job):
     """Try doing some work even if you fail."""
     tries_left = 5
     success = False
+    data = yield_data(**job)
     while not success and tries_left:
         try:
-            helpers.bulk(cli, yield_data(**job))
+            helpers.bulk(cli, data)
             success = True
-        except ElasticsearchException:  # pragma: no cover
+        except ElasticsearchException as msg:  # pragma: no cover
+            print("ElasticsearchException:",tries_left,msg[:100])
             tries_left -= 1
+        except MemoryError as msg: # pragma: no cover
+            print("MemoryError:",tries_left,msg[:100])
+            tries_left -= 1
+            sleep(5)
     return success
 
 
@@ -92,15 +97,15 @@ def yield_data(**kwargs):
     exclude = kwargs.pop('exclude')
     obj_cls = ObjectInfoAPI.get_class_object_from_name(obj)
     render_cls = SearchRender.get_render_class(obj)
-    query = render_cls.get_select_query(obj_cls=obj_cls, **kwargs)
-    return SearchRender.generate(obj, [qobj.to_hash() for qobj in query], exclude)
+    query = render_cls.get_index_query(obj_cls=obj_cls, **kwargs)
+    return SearchRender.generate(obj, [qobj for qobj in query], exclude, obj_cls)
 
 
 def create_worker_threads(threads, work_queue):
     """Create the worker threads and return the list."""
     work_threads = []
     for _i in range(threads):
-        wthread = Thread(target=start_work, args=(work_queue,))
+        wthread = Process(target=start_work, args=(work_queue,))
         wthread.daemon = True
         wthread.start()
         work_threads.append(wthread)
@@ -116,9 +121,9 @@ def generate_work(args, work_queue):
         for time_field in args.compare_dates:
             obj_cls = ObjectInfoAPI.get_class_object_from_name(obj)
             render_cls = SearchRender.get_render_class(obj)
-            query = render_cls.get_select_query(
-                obj_cls=obj_cls, time_delta=time_delta,
-                enable_paging=False, time_field=time_field
+            query = render_cls.get_index_query(
+                obj_cls=obj_cls,
+                enable_paging=False,
             )
             num_pages = int(ceil(float(query.count()) / args.items_per_page))
             for page in range(1, num_pages + 1):
@@ -144,7 +149,7 @@ def search_sync(args):
     if args.celery:
         work_queue = CeleryQueue()
     else:
-        work_queue = Queue(32)
+        work_queue = JoinableQueue(32)
         work_threads = create_worker_threads(args.threads, work_queue)
     generate_work(args, work_queue)
     if args.celery:

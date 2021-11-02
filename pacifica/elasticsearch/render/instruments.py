@@ -19,6 +19,17 @@ class InstrumentsRender(SearchBase):
     rel_objs = ['key_value_pairs']
 
     @classmethod
+    def get_render_query(cls,obj_cls,id):
+        return (
+            Instruments.select()
+            .join(InstrumentKeyValue, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.instrument == Instruments.id))
+            .join(Keys, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.key == Keys.id))
+            .join(Values, JOIN.LEFT_OUTER, on=(InstrumentKeyValue.key == Values.id))
+            .join(TransSIP, JOIN.LEFT_OUTER, on=(TransSIP.instrument == Instruments.id))
+            .where(Instruments.id == id)
+        )
+
+    @classmethod
     @query_select_default_args
     def get_select_query(cls, time_delta, obj_cls, time_field):
         """Generate the select query for groups related to instruments."""

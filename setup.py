@@ -25,7 +25,8 @@ setup(
         'pacifica-metadata>=0.11.0,<1',
         'pacifica-namespace',
         'python-dateutil',
-        'tqdm'
+        'tqdm',
+        'memoization'
     ],
     include_package_data=True,
     package_data={'': ['*.json']},
